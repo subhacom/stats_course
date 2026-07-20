@@ -1,0 +1,14 @@
+#+TITLE: Lesson plan for statistics course for lab
+* Introduction to probability
+** Available props: small red rajma and white cowpeas
+** Bernoulli trial
+1. Pick a bean at random from a 50:50 mix - 50 times : {white, red} = {0, 1} Bernoulli trial
+   1. Get tired of it and scoop a spoonful instead - binomial (not quite if it is well mixed)
+   2. Calculate mean: ~0.5 = p
+   3. Calculate variance: ~0.25 = p * (1-p)
+2. Change the mix to 20 red : 80 white and repeat p = 0.2, variance = p * (1-p) = 0.2 * 0.8 = 0.16
+** Binomial distribution
+1. Same as above, but the total count of red beans in a scoop (count only the first 10):
+   empirical mean np = 10 * 0.5, variance = np * (1-p)
+** IID: unless you return the beans to the bowl, p changes - no more independent and identically distributed
+** Sample vs population
