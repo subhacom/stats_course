@@ -36,9 +36,9 @@ I have a bowl of red beans and a bowl of white beans. Let us
 4. Observe the color and record 0 if it is white, 1 if it is red
 5. Return the bean into the big bowl
 6. Shake the bowl to mix everything up
-7. Repeat 3-6 30 times
+7. Repeat steps 3 to 6 for n=30 times
 8. Calculate the average of the recorded number
-9. Calculate the variance $(\text{value} - \text{average})^2$
+9. Calculate the variance $s^2 = \frac{\sum(\text{value} - \text{average})^2}{n-1}$
 ** Tossing coins
 We have a bunch of coins. Let us
 1. Do 30 coin tosses (3 people do 10 tosses each)
@@ -71,7 +71,7 @@ These three events are different
   - 1 for success, 0 for failure
 - The sum of the probabilities of all outcomes is 1 by definition
 - If probability of success is $p$, that of failure must be $1-p$
-- Mean $\mu = p$, Variance $\sigma^{2} = p \times (1 - p)$
+- Mean $\mu = p$, Variance $\sigma^{2} = p (1 - p)$
 ** Binomial distribution
 - The number of heads out of 30 coin tosses
 - The number of red beans out of 30 draw
@@ -85,6 +85,41 @@ These three events are different
 - The probability of $k$ successes in $n$ coin tosses/draws is $p^{k}(1-p)^{n-k}$
 - You can choose the $k$ success positions in $\binom{n}{k}$ ways
 - Mean: $np$, Variance: $npq = np(1-p)$
+** Measure of central tendency: Mean
+- Mean (average) is the centre of mass, where $p$ is the probability density
+- It is a /measure of central tendency/ (where does the centre of the distribution lie?)
+- Population mean $\mu$
+- Sample mean E(x) = $\bar{X} = \sum_{i} p x_{i}$
+- If every outcome $x_{i}$ has equal probability $p$, it must be $1/n$
+- In that case, $\bar{X} = \sum_{i} (1/n) x_{i} = \frac{\sum x_{i}}{n}$
+** Addition and multiplication of constant
+- What will be the mean if you added a constant to each $x_{i}$?
+- What will be the mean if you multiplied a constant to each $x_{i}$?
+** Measure of central tendency: Median and Mode
+- Sort the data from smallest to largest. The central data point is the /median/. If the number of samples is even, the average of the two central data points is taken as the median.
+- The data value that occurs most frequently in the data set is called /mode/ - it is the data value at which the histogram peaks
+- If multiple values have the same highest frequency, they are called /modal values/ (think of bimodal, multimodal distribution)
+** Percentiles
+- The sample $100 p$ percentile is the data value such that at least $100p$ percent of the data are less than or equal to it, and at least $100 (1-p)$ percen t are greater than or equal to it.
+- Your exam score is in the 96 percentile : Your score is $x_{i}$ such that at least 96% of the scores are below your score and at leats 4% of teh scores are above or equal.
+  - Here $100 p = 96$, so $p = 0.96$
+  - If there were 1000 candidates, $1000 \times 0.96 = 960$  scored less than you, and $40$ scored equal to or more than you.
+- 25th percentile is /first quartile/
+- 50th percentile is the /median/ or /second quartile/
+- 75th percentile is the /third quartile/
+** Deviations
+- Deviation of a data value is the difference between the value and the mean
+- $x_{i} - \bar{x}$
+- The sum of the deviations of all data values is 0
+- To measure the total deviation, we need something that is non-negative
+- Possibilities: $\|x_{i} - \bar{x}\|$, $(x_{i} - \bar{x})^2$
+- /Population variance/ is the average of the sum of squared deviations: $\sigma^{2} = \frac{1}{n}\sum (x_{i} - \bar{x})^2$
+- Sample variance: $s^{2} = \frac{1}{n-1}\sum (x_{i} - \bar{x})^2$
+- Note that we divide by $(n - 1)$. This is called Bessel's correction, reduces bias for small sample size.
+- As $n$ becomes large, the difference between 1/n and 1/(n-1) becomes small, and sample variance approaches population variance
+** Binomial distribution
+- Population mean $\mu = np$ - same as sample mean
+- Population variance $\sigma = npq$
 ** Binomial coefficients (skip?)
 - $\binom{n}{k}$ is also the coefficient of $x^{k}$ in the expansion of $(1+x)^{n}$
 - Possible ways of picking $k$ x-s out of $n$ x-s
@@ -102,9 +137,15 @@ These three events are different
   - 1st position: $n$ possibilities
   - 2nd position: $n - 1$
   - 3rd position: $n - 2$
-  - k-th position: $n - (k - 1)$.
+  - k-th position: $n - (k - 1)$
   - But these positions are indistinguishable for multiplication
   - All permutations become equivalent to one
   - The number of permutations is $k!$
   - So divide by $k!$
 - $\binom{n}{k} = \frac{n \cdot (n-1) \cdot (n-2) \cdots (n - k + 1)}{k \cdot (k - 1) \cdots 2 \cdot 1}$
+* References
+** References
+- Introductory Statistics by Sheldon M. Ross
+- https://www.openintro.org/book/ims/
+- https://inferentialthinking.com
+- How to lie with statistics
