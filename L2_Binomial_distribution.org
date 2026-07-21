@@ -54,8 +54,8 @@
 - Mean (average) is the centre of mass, where $p$ is the probability density
 - It is a /measure of central tendency/ (where does the centre of the distribution lie?)
 - Population mean $\mu$
-- Sample mean E(x) = $\bar{X} = \sum_{i} p x_{i}$
-- If every outcome $x_{i}$ has equal probability $p$, it must be $1/n$
+- Sample mean E(x) = $\bar{X} = \sum_{i} p_{i} x_{i}$
+- If every outcome $x_{i}$ has equal probability $p_{i} = p$, it must be $1/n$
 - In that case, $\bar{X} = \sum_{i} (1/n) x_{i} = \frac{\sum x_{i}}{n}$
 ** Addition and multiplication of constant
 - What will be the mean if you added a constant to each $x_{i}$?
@@ -73,11 +73,10 @@
 - 50th percentile is the /median/ or /second quartile/
 - 75th percentile is the /third quartile/
 ** Deviations
-- Deviation of a data value is the difference between the value and the mean
-- $x_{i} - \bar{x}$
+- Deviation of a data value is the difference between the value and the mean: $x_{i} - \bar{x}$
 - The sum of the deviations of all data values is 0
 - To measure the total deviation, we need something that is non-negative
-- Possibilities: $\|x_{i} - \bar{x}\|$, $(x_{i} - \bar{x})^2$
+- Possibilities: $|x_{i} - \bar{x}|$, $(x_{i} - \bar{x})^2$
 - /Population variance/ is the average of the sum of squared deviations: $\sigma^{2} = \frac{1}{n}\sum (x_{i} - \bar{x})^2$
 - Sample variance: $s^{2} = \frac{1}{n-1}\sum (x_{i} - \bar{x})^2$
 - Note that we divide by $(n - 1)$. This is called Bessel's correction, reduces bias for small sample size.
@@ -85,7 +84,7 @@
 * Back to binomial distribution
 ** Binomial distribution
 - Population mean $\mu = np$ - same as sample mean
-- Population variance $\sigma = npq$
+- Population variance $\sigma^{2} = npq$
 ** Binomial coefficients (skip?)
 - $\binom{n}{k}$ is also the coefficient of $x^{k}$ in the expansion of $(1+x)^{n}$
 - Possible ways of picking $k$ x-s out of $n$ x-s
