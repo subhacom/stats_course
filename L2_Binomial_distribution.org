@@ -1,0 +1,111 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:t ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 2: Bernoulli to binomial
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-07-20 Updated: \today
+#+LANGUAGE: eng
+
+* The theory
+** Bernoulli trial and Bernoulli distribution
+- Only two possible *outcomes*, often called success and failure (but they are equivalent)
+  - red bean and white bean, head and tail are the outcomes
+  - 1 for success, 0 for failure
+- The sum of the probabilities of all outcomes is 1 by definition
+- If probability of success is $p$, that of failure must be $1-p$
+- Mean $\mu = p$, Variance $\sigma^{2} = p (1 - p)$
+** Binomial distribution
+- The number of heads out of 30 coin tosses
+- The number of red beans out of 30 draw
+- Make a histogram of these
+** Binomial distribution
+- Something to do with binomial coefficients
+- Possible ways to get $k$ heads in $n$ coin tosses
+- Possible ways to get $k$ red beans out of $n$ draws
+- This is written as $\binom{n}{k}$
+- The corresponding probability is $\binom{n}{k}p^{k}q^{n-k} = \binom{n}{k}p^{k}(1-p)^{n-k}$
+- The probability of $k$ successes in $n$ coin tosses/draws is $p^{k}(1-p)^{n-k}$
+- You can choose the $k$ success positions in $\binom{n}{k}$ ways
+- Mean: $np$, Variance: $npq = np(1-p)$
+* Terminology
+** Measure of central tendency: Mean
+- Mean (average) is the centre of mass, where $p$ is the probability density
+- It is a /measure of central tendency/ (where does the centre of the distribution lie?)
+- Population mean $\mu$
+- Sample mean E(x) = $\bar{X} = \sum_{i} p x_{i}$
+- If every outcome $x_{i}$ has equal probability $p$, it must be $1/n$
+- In that case, $\bar{X} = \sum_{i} (1/n) x_{i} = \frac{\sum x_{i}}{n}$
+** Addition and multiplication of constant
+- What will be the mean if you added a constant to each $x_{i}$?
+- What will be the mean if you multiplied a constant to each $x_{i}$?
+** Measure of central tendency: Median and Mode
+- Sort the data from smallest to largest. The central data point is the /median/. If the number of samples is even, the average of the two central data points is taken as the median.
+- The data value that occurs most frequently in the data set is called /mode/ - it is the data value at which the histogram peaks
+- If multiple values have the same highest frequency, they are called /modal values/ (think of bimodal, multimodal distribution)
+** Percentiles
+- The sample $100 p$ percentile is the data value such that at least $100p$ percent of the data are less than or equal to it, and at least $100 (1-p)$ percen t are greater than or equal to it.
+- Your exam score is in the 96 percentile : Your score is $x_{i}$ such that at least 96% of the scores are below your score and at leats 4% of teh scores are above or equal.
+  - Here $100 p = 96$, so $p = 0.96$
+  - If there were 1000 candidates, $1000 \times 0.96 = 960$  scored less than you, and $40$ scored equal to or more than you.
+- 25th percentile is /first quartile/
+- 50th percentile is the /median/ or /second quartile/
+- 75th percentile is the /third quartile/
+** Deviations
+- Deviation of a data value is the difference between the value and the mean
+- $x_{i} - \bar{x}$
+- The sum of the deviations of all data values is 0
+- To measure the total deviation, we need something that is non-negative
+- Possibilities: $\|x_{i} - \bar{x}\|$, $(x_{i} - \bar{x})^2$
+- /Population variance/ is the average of the sum of squared deviations: $\sigma^{2} = \frac{1}{n}\sum (x_{i} - \bar{x})^2$
+- Sample variance: $s^{2} = \frac{1}{n-1}\sum (x_{i} - \bar{x})^2$
+- Note that we divide by $(n - 1)$. This is called Bessel's correction, reduces bias for small sample size.
+- As $n$ becomes large, the difference between 1/n and 1/(n-1) becomes small, and sample variance approaches population variance
+* Back to binomial distribution
+** Binomial distribution
+- Population mean $\mu = np$ - same as sample mean
+- Population variance $\sigma = npq$
+** Binomial coefficients (skip?)
+- $\binom{n}{k}$ is also the coefficient of $x^{k}$ in the expansion of $(1+x)^{n}$
+- Possible ways of picking $k$ x-s out of $n$ x-s
+- You have $n$ terms to multiply
+- $(1 + x_{1}) (1 + x_{2}) \cdots (1 + x_{n})$
+- $1 + [x_{1} + x_{2} + \cdots + x_{n}] + [(x_{1} x_{2} + x_{1} x_{3} + \cdots + x_{1} x_{n}) + (x_{2} x_{3} + x_{2} x_{4} + \cdots + x_{2} x_{n}) + \cdots + (x_{n-1} x_{n})] + \cdots$
+** Binomial coefficients (skip?)
+- $1 + [x_{1} + x_{2} + \cdots + x_{n}] + [(x_{1} x_{2} + x_{1} x_{3} + \cdots + x_{1} x_{n}) + (x_{2} x_{3} + x_{2} x_{4} + \cdots + x_{2} x_{n}) + \cdots + (x_{n-1} x_{n})] + \cdots$
+- How many ways to pick two $x$ s out of $n$ different items?
+  - $n$ possibilities for the first position, $n - 1$ for the second, so a total of $n (n - 1)$ possibilities.
+  - But the $x$ are indistinguishable, so that ab = ba
+  - So only 1 for 2 - divide by 2: $\frac{n (n - 1)}{2}$
+** Binomial coefficients (skip?)
+- How many ways to make a product of $k$ x-s?
+  - 1st position: $n$ possibilities
+  - 2nd position: $n - 1$
+  - 3rd position: $n - 2$
+  - k-th position: $n - (k - 1)$
+  - But these positions are indistinguishable for multiplication
+  - All permutations become equivalent to one
+  - The number of permutations is $k!$
+  - So divide by $k!$
+- $\binom{n}{k} = \frac{n \cdot (n-1) \cdot (n-2) \cdots (n - k + 1)}{k \cdot (k - 1) \cdots 2 \cdot 1}$
