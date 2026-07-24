@@ -19,7 +19,7 @@ print('Number of trials/sample size n=', n)
 #%%
 mean = sum(H) / n
 print('Sample mean =', mean)
-
+#%%
 deviations = [(h - mean) for h in H]
 print('deviations', deviations)
 print('Sum of deviation', sum(deviations))
@@ -30,9 +30,13 @@ print('Sum of absolute deviation', sum(abs_dev))
 
 #%%
 squared_dev = [dev*dev for dev in deviations]
-print('Sum of squared deviations', sum(squared_dev))
-
+print('Sum of squared deviations (sample variance)', sum(squared_dev))
+#%%
 s2 = sum(squared_dev)/n
+print('Average of squared deviations', s2)
+print('Root mean squared deviation, standard deviation', np.sqrt(s2))
+#%%
+s2 = sum(squared_dev)/(n-1)
 print('Average of squared deviations', s2)
 print('Root mean squared deviation, standard deviation', np.sqrt(s2))
 
@@ -40,8 +44,11 @@ print('Root mean squared deviation, standard deviation', np.sqrt(s2))
 import matplotlib.pyplot as plt
 plt.hist(H, bins=np.arange(31))
 plt.show()
+#%%
 
-
+print('Theoretical variance:', 20 * 0.5 * 0.5)
+print('SD', np.sqrt(20 * 0.5 * 0.5))
+#%%
 
 #
 # binomial_exp.py ends here
