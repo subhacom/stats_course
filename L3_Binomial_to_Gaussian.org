@@ -1,0 +1,73 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:t ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 3: Binomial to Gaussian distribution
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-07-24 Updated: \today
+#+LANGUAGE: eng
+* Experiment
+** Back to beans
+1. Each of you take a bowl of 50 red and 50 white beans
+2. Pick a bean at a time without looking, then check the color and note 1 if red, 0 if white, and return the bean to the bowl
+   - Returning the bean is important, this is called "with replacement", if you did not return the bean, that is "without replacement", and changes the proportion of beans and hence the probabilities
+** Back to beans
+1. Conduct 10 such draws and note down the number of red beans
+   - Each 10-draw is 10 Bernoulli trials, $X_{1}$ is 1 if the first draw is a red bean and 0 otherwise, $X_{2}$ is 1 if the second draw is a red bean and 0 otherwise, ..., $X_{10}$ is 1 if the 10th draw is a red bean and 0 otherwise
+2. Do such 10-draws for a total of 10 times (or fewer if we have more people - we need about 40 instances of 10-draws). Say, we have done a total of 40 experiments as a team
+   - All the first draws are samples of $X_{1}$, all the second draws are samples of $X_{2}$, etc.
+* Analysis
+** Compute empirical statistics
+- Compute the mean of each experiment: $\bar{X} = \frac{X_{1} + X_{2} + \cdots + X_{N}}{N}$ - this is the fraction of red beans in each experiment
+- Compute the variance of each experiment $Var{X} = \frac{(X_{1} - \bar{X})^{2} + (X_{2} - \bar{X})^{2} + \cdots + (X_{N} - \bar{X})^{2}}{N}$
+** Compare empirical result with theoretical prediction
+- The theoretical mean of the Bernoulli random variable is $\mu = p$ where $p$ is the fraction of red beans in our population
+- The expercted value of the sample mean $E(\bar{X}) = \frac{E(X_{1}) + E(X_{2}) + \cdots + E(X_{N})}{N} = \frac{N \mu}{N} = \mu$
+- The variance in the sample mean should be $Var(\bar{X}) = Var(\frac{X_{1} + X_{2} + \cdots + X_{N}}{N}) = \frac{Var(X_{1} + X_{2} + \cdots + X_{N})}{N^{2}} = \frac{Var(X_{1}) + Var(X_{2}) + \cdots + Var(X_{N})}{N^{2}} = \frac{N \sigma^{2}}{N^{2}} = \frac{\sigma^{2}}{N}$
+
+
+/Note: $Var(cX) = c^{2}Var(X)$ and $Var(X+Y) = Var(X) + Var(Y) + Cov(X,Y)$, but $Cov(X,Y) = 0$ when $X$ and $Y$ are independent r.v.s/
+** Verify the properties of the sampling distribution
+1. Plot the histogram of the fraction of red beans across all the 10-draws experiments
+2. Here $N=10$, $p=0.5$, $\sigma^{2} = p (1-p) = 0.25$, compute the mean of the means and the variance of the means and check if it matches theory
+3. Now repeat this with a larger count of 30 draws. How well does the variance of the sample mean follow the theory?
+* Observations
+** Observations
+- The true parameter we were trying to estimate is $p$ - the probability of picking a red bean, this is the population mean ($\mu$) of the Bernoulli random variable
+- The estimate of the parameter is $\hat{p}$ computed from the sample, this is the /sample mean/ ($\bar{X}$) of the /Bernoulli random variable/
+- The histograms show the *sampling distribution of the mean*
+- What is the mean of the fractions? This is the /sample mean of the sample means/
+- Look at the width of the histograms (10 draws vs 30 draws)
+- This is the spread in the sample mean, can be quantified as variance
+** Bernoulli to Gaussian
+- Notice that the histogram becomes narrower as we increase the number
+  of draws in each repeat
+- Also notice that the histogram gets closer to a bell curve as we increase the number of repeats
+* Theory
+** Weak Law of large numbers
+Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon \ge 0$, $\lim_{n \to \infty} P(|\bar{X} - \mu | \ge \epsilon) = 0$
+** Central limit theorem (CLT)
+Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$ and finite nonzero variance $\sigma^{2}. Then the random variable $Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{N}}$ converges in distribution to the standard normal random variable as $N \to \infty$
+
+Thus whenever you are looking at a random variable that results as a summation of many iid random variables, it tends to be distributed normally.
