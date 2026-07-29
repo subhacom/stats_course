@@ -33,24 +33,29 @@ print('Mean', np.mean(counts))
 print('Variance', np.var(counts))
 
 N = 10
+
 sample_means = [count / N for count in counts]
 print('Sample means', sample_means)
 #%%
 print('Mean of means', np.mean(sample_means))
 print('Variance in sample mean', np.var(sample_means))
 
-#%% taking 4 draws as a single 40-draw
+#%%
+
+# taking 4 10-draws as a single 40-draw - note that count must be a
+# multiple of 4 for this to work
 counts_40 = [sum(counts[ii:ii+4])
              for ii in range(0, len(counts), 4)]
-print('COunts for 40 draws', counts_40)
-sample_means_40 = [count / 40.0 for count in counts_40]
+print('Counts for 40 draws', counts_40)
+sample_means_40 = [count / 40 for count in counts_40]
 
 print('Variance for 40 draws', np.var(sample_means_40))
 
 #%%
 fig, axes = plt.subplots(nrows=2, sharex='all', sharey='all')
-axes[0].hist(sample_means, bins=np.linspace(0, 1, 10))
-axes[1].hist(sample_means_40, bins=np.linspace(0, 1, 10))
+bins = np.arange(-0.05, 1.06, 0.1)
+axes[0].hist(sample_means, bins=bins)
+axes[1].hist(sample_means_40, bins=bins)
 plt.show()
 
 

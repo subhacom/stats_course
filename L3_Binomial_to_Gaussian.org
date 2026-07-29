@@ -64,6 +64,7 @@
 - Notice that the histogram becomes narrower as we increase the number
   of draws in each repeat
 - Also notice that the histogram gets closer to a bell curve as we increase the number of repeats
+- Two scripts for simulating Bernoulli trials (N-draws of beans) and plotting the histogram of sanple means are [[./scripts/bernoulli_to_gaussian.py]] and [[scripts/bernoulli_to_gaussian_v2.py]]
 * Theory
 ** Weak Law of large numbers
 Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon \ge 0$, $\lim_{n \to \infty} P(|\bar{X} - \mu | \ge \epsilon) = 0$

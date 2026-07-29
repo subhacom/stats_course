@@ -76,7 +76,8 @@ These three events are different
 - The number of heads out of 30 coin tosses
 - The number of red beans out of 30 draw
 - Make a histogram of these
-
+* Code
+The code analyzing the data from our bean-draw experiment is in [[./scripts/binomial_exp.py]]
 * References
 ** References
 - Introductory Statistics by Sheldon M. Ross
