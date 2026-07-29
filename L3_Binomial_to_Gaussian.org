@@ -41,6 +41,7 @@
 ** Compute empirical statistics
 - Compute the mean of each experiment: $\bar{X} = \frac{X_{1} + X_{2} + \cdots + X_{N}}{N}$ - this is the fraction of red beans in each experiment
 - Compute the variance of each experiment $Var{X} = \frac{(X_{1} - \bar{X})^{2} + (X_{2} - \bar{X})^{2} + \cdots + (X_{N} - \bar{X})^{2}}{N}$
+- Script for analyzing this data:  [[./scripts/bernoulli_to_gaussian.py]]
 ** Compare empirical result with theoretical prediction
 - The theoretical mean of the Bernoulli random variable is $\mu = p$ where $p$ is the fraction of red beans in our population
 - The expercted value of the sample mean $E(\bar{X}) = \frac{E(X_{1}) + E(X_{2}) + \cdots + E(X_{N})}{N} = \frac{N \mu}{N} = \mu$
@@ -64,7 +65,7 @@
 - Notice that the histogram becomes narrower as we increase the number
   of draws in each repeat
 - Also notice that the histogram gets closer to a bell curve as we increase the number of repeats
-- Two scripts for simulating Bernoulli trials (N-draws of beans) and plotting the histogram of sanple means are [[./scripts/bernoulli_to_gaussian.py]] and [[./scripts/bernoulli_to_gaussian_v2.py]]
+- Two scripts for simulating Bernoulli trials (N-draws of beans) and plotting the histogram of sanple means are [[./scripts/binomial_to_gaussian.py]] and [[./scripts/binomial_to_gaussian_v2.py]]
 * Theory
 ** Weak Law of large numbers
 Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon \ge 0$, $\lim_{n \to \infty} P(|\bar{X} - \mu | \ge \epsilon) = 0$
