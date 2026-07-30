@@ -1,0 +1,66 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:t ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 4: Normal (Gaussian) distribution
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-07-24 Updated: \today
+#+LANGUAGE: eng
+* Theory
+** Weak Law of large numbers
+Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon > 0$, $\lim_{N \to \infty} P(|\bar{X} - \mu | < \epsilon) = 0$
+** Central limit theorem (CLT)
+Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$ and finite nonzero variance $\sigma^{2}$. Then the random variable $Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{N}}$ converges in distribution to the standard normal random variable as $N \to \infty$
+
+Thus whenever you are looking at a random variable that results as a summation of many iid random variables, it tends to be distributed normally.
+** Continuous random variables
+- The distribution of a continuous random variable is defined by a function $X \rightarrow \mathbb{R}$
+- This is called /probability density function/ (PDF) as opposed to /probability mass function/ for discrete rv
+- The probability at any single point on the real line is 0. We can only talk about probability of the rv being within a range of values $P(a \le X \le b)$ which is the area under the curve between $a$ and $b$ in the plot of the /probability density function/
+- The total area under a PDF must be 1
+** Normal or Gaussian random variable
+- The PDF is determined by two /parameters/ - mean $\mu$ and standard deviation $\sigma$
+- Bell-shaped curve symmetrical around $\mu$, the spread determined by $\sigma$
+  - $P(X < \mu) = P(X > \mu) = 1/2$
+- The height at point $x$ is $\frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x - \mu)^{2}}{2\sigma^{2}}}$
+  - Not every bell-shaped symmetric curve is normal
+- A normal distribution with mean 0 and SD 1 is called standard normal, usually represented by $Z$
+* Useful
+** Normal to standard normal
+- Any normal random variable can be /standardized/ to make a standard normal distribution
+- $Z = \frac{x - \mu}{\sigma}$
+- By plotting the data in standard normal form you can get a quick feel of the data
+** Approximate rule for normal distribution
+- $P(\mu - \sigma < X < \mu + \sigma) = 0.68$
+  - 68% values lies within one SD around mean
+- $P(\mu - 2 \sigma < X < \mu + 2 \sigma) = 0.95$
+  - 95% values lies within two SD around mean
+- $P(\mu - 3 \sigma < X < \mu + 3 \sigma) = 0.997$
+  - 99.7 values lies within three SD around mean
+** Some useful results
+- $P(Z > x) = 1 - P(Z \le x)$
+- $P(-a < Z < a) = 2P(Z < a) - 1$
+- The sum of two independent normal rvs is also a normal rv
+  - $E(X + Y) = E(X) + E(Y) = \mu_{x} + \mu_{y}$
+  - $Var(X + Y) = Var(X) + Var(Y) = {\sigma_{x}}^{2} + {\sigma_{y}}^{2}$

@@ -37,6 +37,7 @@ def Bernoulli_sampling(n, N, p):
     samples = []
     for ii in range(n):
         samples.append(bean_draw(N, p))
+
     sample_means = [np.mean(sample) for sample in samples]
     # `np.var(sample_array, ddof)` calculates variance where ddof
     # represents `delta degrees of freedom`. It computes variance as
@@ -52,16 +53,17 @@ def Bernoulli_sampling(n, N, p):
     print('Draws N=', N, 'p=', p, 'repeats n=', n)
     print('E(Xbar):', mean_of_means, 'Theoretical:', p)
     print('Var(Xbar):', var_of_means, 'Theoretical:', p * (1-p)/N)
-    print('Mean of sample variances:', mean_of_vars)
+    print('Mean of sample variances:', mean_of_vars, 'Theoretical:', p*(1-p))
 
     # Return the results as a dict
     return {'samples': samples,
             'sample_means': sample_means,
             'mean_of_means': mean_of_means,
             'var_of_means': var_of_means}
+#%%
 
+n = 30
 
-n = 1000
 N_small = 10
 p = 0.5
 ret_small = Bernoulli_sampling(n, N_small, p)
