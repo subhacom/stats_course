@@ -1,0 +1,65 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:nil ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 5: Estimation
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-08-04 Updated: \today
+#+LANGUAGE: eng
+* Theory
+** Estimator
+"An /estimator/ is a statistic whose value depends on the particular sample drawn. The value of the estimator, called the /estimate/, is used to predict the value of a population parameter."
+** Point estimators: mean
+- Single-value estimates of a parameter like population mean, population variance, etc., from a sample
+- Point estimator of population mean $\mu$ is $\bar{X} = \frac{\sum_{n} X_{i}}{n}$.
+- An estimator whose expected value equals the population parameter is called an /unbiased/ estimator of the parameter. $E[\bar{X}] = \mu$, so it is an /unbiased/ estimator of the population mean
+- The standard deviation in the sample mean is $\text{SD}(\bar{X}) = \sigma/\sqrt{n}$ - called /standard error of the mean/
+** Point estimators: variance and standard deviation
+- When population mean $\mu$ is known, $\sigma^{2} = E[(X_{i} - \mu)^{2}]$, so the estimator of population variance should be $\frac{\sum_{n}(X_{i} - \mu)^{2}}{n}$
+- But we do not know $\mu$, and estimate it by $\bar{X}$
+- The unbiased estimator is $S^{2} = \frac{\sum_{n}(X_{i} - \bar{X})^{2}}{n-1}$ so that $E(S^{2}) = \sigma^{2}$
+** Percentiles of Gaussian random variables
+- For any $\alpha$ between 0 and 1, $z_{\alpha}$ represents the $100 (1 - \alpha)$ percentile of the standard normal distribution
+  - that is $1 - \alpha$ fraction of the data points are under $z_{\alpha}$
+  - $P(Z > z_{\alpha}) = \alpha$
+- Example: $z_{0.025} = 1.96$ => 2.5% of the time a standard normal rv will exceed 1.96
+** Interval estimators
+- "An /interval estimator/ of a population parameter is an interval (in the real line) that is predicted to contain the parameter."
+- "The /confidence/ we ascribe to the interval is the probability that it will contain the parameter"
+** Interval estimator of $\mu$ of normal population with known $\sigma^{2}$
+- $z_{0.025} = 1.96$ means $P(Z > 1.96) = 0.025$.
+- By symmetry of the Gaussian distribution this also means $P(Z < -1.96) = 0.025$
+- Putting these together, $P(|Z| > 1.96) = 2 \times 0.025 = 0.05$
+- Therefore $P(|Z| < 1.96) = 1 - 0.05 = 0.95$, i.e., 95% of the time the /absolute value of Z/ is less than or equal to 1.96
+- Now we are estimating the population mean $\mu$ by $\bar{X}$. The standardized sample mean is $Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} = \frac{\sqrt{n}}{\sigma}(\bar{X} - \mu)$
+- Thus $P(\frac{\sqrt{n}}{\sigma}|\bar{X} - \mu| \le 1.96) = 0.95$
+- Or, $P(|\bar{X} - \mu| \le 1.96 \frac{\sigma}{\sqrt{n}}) = 0.95$
+- Or $P(\bar{X} - 1.96 \frac{\sigma}{\sqrt{n}} \le \mu \le \bar{X} + 1.96 \frac{\sigma}{\sqrt{n}}) = 0.95$
+** Interval estimator of $\mu$ of normal population with known $\sigma^{2}$
+- Or $P(\bar{X} - 1.96 \frac{\sigma}{\sqrt{n}} \le \mu \le \bar{X} + 1.96 \frac{\sigma}{\sqrt{n}}) = 0.95$
+- The interval $\bar{X} \pm 1.96\text{SEM}$ is called a 95% confidence interval estimator of the population mean
+- If you repeat the sampling many times and compute $\bar{X}$ and estimate this interval, 95% of these intervals will contain the population mean
+- *Note: it is incorrect to say that there is a 95% probability that the population mean will lie within 1.96 SEM of a single sample mean.*
+** Interval estimator of $\mu$ of normal population with known $\sigma^{2}$
+The $100 (1-\alpha)$ percent confidence interval estimator of the population mean is $\bar{X} \pm \frac{\sigma}{\sqrt{n}}z_{\alpha/2}$

@@ -29,13 +29,13 @@
 #+LANGUAGE: eng
 * Theory
 ** Weak Law of large numbers
-Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon > 0$, $\lim_{N \to \infty} P(|\bar{X} - \mu | < \epsilon) = 0$
+Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon > 0$, $\lim_{N \to \infty} P(|\bar{X} - \mu | \ge \epsilon) = 0$
 ** Central limit theorem (CLT)
 Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$ and finite nonzero variance $\sigma^{2}$. Then the random variable $Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{N}}$ converges in distribution to the standard normal random variable as $N \to \infty$
 
 Thus whenever you are looking at a random variable that results as a summation of many iid random variables, it tends to be distributed normally.
 ** Continuous random variables
-- The distribution of a continuous random variable is defined by a function $X \rightarrow \mathbb{R}$
+- The distribution of a continuous random variable is defined by a function $\mathbb{R} \rightarrow \mathbb{R}$
 - This is called /probability density function/ (PDF) as opposed to /probability mass function/ for discrete rv
 - The probability at any single point on the real line is 0. We can only talk about probability of the rv being within a range of values $P(a \le X \le b)$ which is the area under the curve between $a$ and $b$ in the plot of the /probability density function/
 - The total area under a PDF must be 1
@@ -46,18 +46,18 @@ Thus whenever you are looking at a random variable that results as a summation o
 - The height at point $x$ is $\frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x - \mu)^{2}}{2\sigma^{2}}}$
   - Not every bell-shaped symmetric curve is normal
 - A normal distribution with mean 0 and SD 1 is called standard normal, usually represented by $Z$
-* Useful
+* Useful definitions and results
 ** Normal to standard normal
 - Any normal random variable can be /standardized/ to make a standard normal distribution
-- $Z = \frac{x - \mu}{\sigma}$
+- $Z = \frac{X - \mu}{\sigma}$
 - By plotting the data in standard normal form you can get a quick feel of the data
 ** Approximate rule for normal distribution
-- $P(\mu - \sigma < X < \mu + \sigma) = 0.68$
-  - 68% values lies within one SD around mean
-- $P(\mu - 2 \sigma < X < \mu + 2 \sigma) = 0.95$
-  - 95% values lies within two SD around mean
-- $P(\mu - 3 \sigma < X < \mu + 3 \sigma) = 0.997$
-  - 99.7 values lies within three SD around mean
+- $P(\mu - \sigma < X < \mu + \sigma) \approx 0.68$
+  - 68% of values lie within one SD around mean
+- $P(\mu - 2 \sigma < X < \mu + 2 \sigma) \approx 0.95$
+  - 95% of values lie within two SD around mean
+- $P(\mu - 3 \sigma < X < \mu + 3 \sigma) \approx 0.997$
+  - 99.7% of values lie within three SD around mean
 ** Some useful results
 - $P(Z > x) = 1 - P(Z \le x)$
 - $P(-a < Z < a) = 2P(Z < a) - 1$
