@@ -53,7 +53,7 @@
     # the current directory The filename is "salaries_by_college_major.csv"
     # and it is located in the "scripts" subdirectory under the current
     # directory
-    df = pd.read_csv('./scripts/salaries_by_college_major.csv')
+    df = pd.read_csv('./data/salaries_by_college_major.csv')
   #+end_src
 
 * Take a look at the dataframe
@@ -148,14 +148,14 @@ Also, to have different things plotted in different windows, you have to create 
     # This creates two axes in two rows
     ax[0].plot(df.starting, df.mid)
     ax[1].plot(df.starting, df.mid90)
-    fname = 'scripts/line_plot.png'
+    fname = 'data/line_plot.png'
     fig.savefig(fname)
     plt.show()  # do this in interactive plotting
     fname
   #+end_src
 
   #+RESULTS: create-subplots
-  [[file:scripts/line_plot.png]]
+  [[file:data/line_plot.png]]
 
 **  Question: Why do the line plots look weird?
 
@@ -191,14 +191,14 @@ Also, to have different things plotted in different windows, you have to create 
     ax.set_ylabel('Average median salary')
     fig.suptitle('Group and starting salaries')
     fig.tight_layout()
-    fname = './scripts/bar_plot.png'
+    fname = './data/bar_plot.png'
     fig.savefig(fname)
     plt.show()
     fname
   #+end_src
 
   #+RESULTS: bar-chart
-  [[file:./scripts/bar_plot.png]]
+  [[file:./data/bar_plot.png]]
 
 
 * Bar chart with error bars
@@ -214,14 +214,14 @@ Also, to have different things plotted in different windows, you have to create 
         ax.tick_params(axis='x', rotation=45)
         fig.suptitle('Starting salary by Group with SEM')
         fig.tight_layout()
-        fname = 'scripts/error_bar_plot.png'
+        fname = 'data/error_bar_plot.png'
         fig.savefig(fname)
         plt.show()
         fname
   #+end_src
 
   #+RESULTS: sem-bar-plot
-  [[file:scripts/error_bar_plot.png]]
+  [[file:data/error_bar_plot.png]]
 
 
 * Box plot
@@ -240,11 +240,11 @@ Here we create another plot showing mid-career salaries using ~axes.boxplot()~ w
     ax.tick_params(axis='x', rotation=45)
     fig.suptitle('Mid-career salaries')
     fig.tight_layout()
-    fname = 'scripts/box_plot.png'
+    fname = 'data/box_plot.png'
     fig.savefig(fname)
     plt.show()
     fname
   #+end_src
 
   #+RESULTS: box-plot
-  [[file:scripts/box_plot.png]]
+  [[file:data/box_plot.png]]
