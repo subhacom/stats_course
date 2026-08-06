@@ -80,3 +80,18 @@ Therefore, $E\left[\sum_{i=1}^{n}Z_{i}^{2}\right] = \sum_{i=1}^{n}E[Z_{i}^{2}] =
 ** Confidence interval of mean of population with unknown variance
 - Just like the known variance ($\sigma^{2}$) case, $P\left(\frac{|\bar{X} - \mu|}{S/\sqrt{n}} \le t_{n-1,\alpha/2}\right) = 1 - \alpha$
 - $\bar{X} \pm \frac{S}{\sqrt{n}}t_{n-1, \alpha/2}$ is a $100(1 - \alpha)$ percent CI estimator for population mean
+** If we are only interested in whether $\mu$ is above or below some value
+- A $100 (1- \alpha)$ lower confidence bound for $\mu$ is $\bar{X} - z_{\alpha} \frac{\sigma}{\sqrt{n}}$
+  - For unknown variance: $\bar{X} - t_{n-1,\alpha} \frac{\bar{S}}{\sqrt{n}}$
+- A $100 (1- \alpha)$ upper confidence bound for $\mu$ is $\bar{X} + z_{\alpha} \frac{\sigma}{\sqrt{n}}$
+  - For unknown variance: $\bar{X} + t_{n-1,\alpha} \frac{\bar{S}}{\sqrt{n}}$
+- Note that we are using $z_{\alpha}$ as opposed to of $z_{\alpha/2}$ for CI (why?)
+* Sample size
+** How many samples do you need to be 90% certain that your sample mean is correct within $\pm 0.1$ units?
+- 90% CI will have $\alpha/2 = \frac{(100 - 90)/100}{2} = 0.05$
+- Thus, for sample size of $n$ you have 90% confidence that $\mu$ is within $\bar{X} \pm \frac{\sigma}{\sqrt{n}}z_{\alpha/2}$
+- $0.1 = \frac{\sigma}{\sqrt{n}}z_{0.05}$, you know $\sigma$ and $z_{0.05}$, find $n$
+- In general, we can make $b$ the length of the estimator (interval) for $100 (1 - \alpha)$ percent CI
+  - That is, we are looking to make the CI $\pm b/2$ around $\bar{X}$
+  - $b/2 = \frac{\sigma z_{\alpha/2} }{\sqrt{n}}$
+  - Sample size $n$ should satisfy: $n \ge \left(\frac{2 \sigma z_{\alpha/2} }{b}\right)^{2}$
