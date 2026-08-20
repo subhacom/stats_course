@@ -293,7 +293,7 @@ Normal distribution with mean $\mu$ and SD $\sigma$ has pdf $f(x) = \frac{1}{\si
 #+ATTR_LATEX: :height 0.9\textheight
 [[file:./normal_distribution_ppf.png]]
 
-* t test with scipy
+* t-test with scipy
 ** Back to the example
 You test a drug for reducing blood cholesterol  on 40 patients with high cholesterol (>= 200 mg/dL of serum). After 60 days there was an average decrease of 6.8 mg/dL and SD of 12.1 mg/dL. Was your drug effective at lowering cholesterol at 5% level of significance?
 
@@ -370,21 +370,21 @@ With real data you do not need to do the above mental gymnastics!
 
 H0: mu = mu0 vs H1: mu != mu0
 
-- 1-sample t test (two sided): ~scipy.stats.ttest_1samp(x, mu0)~
+- 1-sample t-test (two sided): ~scipy.stats.ttest_1samp(x, mu0)~
 
 H0: mu <= mu0 vs H1: mu > mu0
 
-- 1-sample t test (one sided): ~scipy.stats.ttest_1samp(x, mu0, alternative='greater')~
+- 1-sample t-test (one sided): ~scipy.stats.ttest_1samp(x, mu0, alternative='greater')~
 
 H0: mu >= mu0 vs H1: mu < mu0
 
-- 1-sample t test (one sided): ~scipy.stats.ttest_1samp(x, mu0, alternative='less')~
+- 1-sample t-test (one sided): ~scipy.stats.ttest_1samp(x, mu0, alternative='less')~
 
 
 where ~x~ is your array of data values.
 
 ** Example 2 (modified from Sheldon Ross)
-A decade ago in an industrial area the mean pH level of rain was 5.2. The pH levels recorded of rainstorms in the past year were recorded to be: 6.1, 5.4, 4.8, 5.8, 6.6, 5.3, 6.1, 4.4, 3.9, 6.8, 6.5, 6.3. Has the pH level changed in the past 10 years? Assume 5% level of significance.
+A decade ago in an industrial area the mean pH level of rain was 5.2. The pH levels of rainstorms in the past year were recorded to be: 6.1, 5.4, 4.8, 5.8, 6.6, 5.3, 6.1, 4.4, 3.9, 6.8, 6.5, 6.3. Has the pH level changed in the past 10 years? Assume 5% level of significance.
 
 - What are H0 and H1?
 
@@ -433,7 +433,7 @@ A decade ago in an industrial area the mean pH level of rain was 5.2. The pH lev
              fig.savefig('ttest_example_2.png')
 #+end_src
 
-#+ATTR_LATEX: :height \textheight
+#+ATTR_LATEX: :height 0.9\textheight
 [[file:./ttest_example_2.png]]
 
 
