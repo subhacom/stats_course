@@ -1,0 +1,444 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:nil ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 9: Hypothesis testing - t-test
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-08-18 Updated: \today
+#+LANGUAGE: eng
+
+* Hypothesis testing when population variance is unknown
+** Hypothesis testing when population variance is unknown
+For normally distributed population where we know $\sigma$ we can use Z-test.
+
+For two-sided test:
+- H0: $\mu = \mu_{0}$
+- H1: $\mu \ne \mu_{0}$
+\bigskip
+If $\frac{\sqrt{n}}{\sigma} |\bar{X} - \mu_{0}|  \ge z_{\alpha/2}$ then reject H0 at significance level $\alpha$.
+\bigskip
+
+Usually we do not know $\sigma$.
+
+** Hypothesis testing when population variance is unknown
+*** Top                                                           :B_onlyenv:
+:PROPERTIES:
+:BEAMER_env: onlyenv
+:END:
+When population variance $\sigma^{2}$ is unknown, we estimate $\sigma^{2}$ with sample variance with Bessel's correction:
+
+
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\bigskip
+
+$S^{2} = \frac{\sum_{i=1}^{n}(X_{i} - \bar{X})^{2}}{n-1}$
+
+\bigskip
+
+When we replace $\sigma$ by $S$ in the standardization,
+
+\bigskip
+
+instead of $Z = \frac{\sqrt{n}}{\sigma}(\bar{X} - \mu_{0})$, we have
+
+\bigskip
+
+$T  = \frac{\sqrt{n}}{S}(\bar{X} - \mu_{0})$
+
+\bigskip
+
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+ATTR_LATEX: :height 0.6\textheight
+[[file:./Ross_fig9.4.png]]
+
+*** Bottom                                                        :B_onlyenv:
+:PROPERTIES:
+:BEAMER_env: onlyenv
+:END:
+
+which follows the T-distribution with $(n-1)$ degrees of freedom. Thus our $z_{\alpha/2}$ should be replaced by $t_{n-1,\alpha/2}$.
+
+** Hypothesis testing when population variance is unknown
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+Similar to Z-test, with $H_{0}: \mu = \mu_{0}$ and $H_{1}: \mu \ne \mu_{0}$ and significance level $\alpha$,
+
+\bigskip
+
+reject $H_{0}$ if $|T| \ge t_{n-1, \alpha/2}$
+
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+ATTR_LATEX: :height 0.5\textheight
+[[file:./Ross_fig9.5.png]]
+
+*** p value
+
+If $T  = \frac{\sqrt{n}}{S}(\bar{X} - \mu_{0})$ has a value $v$ for our sample, the $p$ value is the probability that a value of the test statistic as large as $v$ would occur by chance when $H_{0}$ is true:
+
+\bigskip
+
+$p = P(|T_{n-1}| \ge |v|) = 2 P(T_{n-1} \ge |v|)$
+
+* Example
+
+** Example (modified from Sheldon Ross)
+You test a drug for reducing blood cholesterol  on 40 patients with high cholesterol (>= 200 mg/dL of serum). After 60 days there was an average decrease of 6.8 mg/dL and SD of 12.1 mg/dL. Was your drug effective at lowering cholesterol?
+
+\bigskip
+
+Taking $\mu$ as the average decrease of cholesterol,
+
+$H_{0}: \mu = 0$ vs $H_{1}: \mu \ne 0$
+
+\bigskip
+
+$T = \frac{\sqrt{n}}{S}(\bar{X} - \mu_{0}) = 3.554$
+
+\bigskip
+
+Find $t_{39,0.025}$.
+\bigskip
+What other problems do you find in this study?
+* Aside: Coding
+** Aside: ~scipy.stats~ module
+- SciPy has a ~stats~ submodule with some statistical utilities (https://docs.scipy.org/doc/scipy/reference/stats.html). There are classes for rvs for various distributions
+- Example: ~scipy.stats.t~ is the ~class~ for Student's t continuous random variable, ~scipy.stats.poisson~ is the ~class~ for Poisson discrete random variable
+- These classes have some common ~methods~:
+  - ~pdf~ - probability density for continuous rv
+  - ~pmf~ - probability mass function for discrete rv
+** Example of using PDF/PMF
+For Poisson distribution, pmf is $f(k) = \frac{\lambda^{k}}{k!}e^{-\lambda}$
+#+begin_src python :session hypothesis :exports code :results none
+     import numpy as np
+     from scipy import stats
+     from scipy.special import factorial
+     # lambda is a python keyword, hence the trailing underscore
+     lambda_ = 2.0
+     k = 2
+     print('Numpy result by formula: p(k=2):',
+           np.exp(-lambda_) * lambda_ ** k / factorial(k))
+     pv = stats.poisson(mu=lambda_)
+     print('scipy.stats:', pv.pmf(k))
+     # you can also call pmf directly without a Poisson rv
+     print('scipy.stats.poisson.pmf:', stats.poisson.pmf(k, lambda_))
+#+end_src
+
+** Example of using PDF/PMF
+Normal distribution with mean $\mu$ and SD $\sigma$ has pdf $f(x) = \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{(x - \mu)^{2}}{2 \sigma^{2}}}$
+
+#+begin_src python :session hypothesis :exports code :results none
+     mu = 2.0
+     sigma = 3.0
+     x = 1.0
+     print(f'Numpy result by formula: pdf(x={x}):',
+           1.0/(sigma * np.sqrt(2 * np.pi)) *
+           np.exp(-(x - mu)**2/(2 * sigma ** 2)))
+     print('scipy.stats.norm.pdf:',
+           stats.norm.pdf(x, loc=mu, scale=sigma))
+#+end_src
+
+** Plot the normal pdf
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+
+#+begin_src python :session hypothesis :exports code :results none
+    from matplotlib import pyplot as plt
+    mu = 2.0
+    sigma = 3.0
+    x = np.arange(mu-10, mu+10, 0.1)
+    fig, ax = plt.subplots()
+    ax.plot(x,
+            stats.norm.pdf(x, loc=mu,
+                           scale=sigma),
+            label='mu=2, sigma=3')
+    ax.plot(x,
+            stats.norm.pdf(x, loc=4, scale=0.5),
+            label='mu=4, sigma=0.5')
+    ax.legend()
+    fig.savefig('normal_distribution.png')
+#+end_src
+
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+#+ATTR_LATEX: :width \textwidth
+[[file:./normal_distribution.png]]
+
+
+** Other function related to probability distributions
+
+- ~cdf(x, *args, **kwargs)~ is the cumulative distribution function $P(X \le x)$
+
+  - ~x~ real number or ~array_like~, i.e., ~ndarray~, ~list~, or such /sequence/ of numbers
+
+  - ~*arg~ indicates /positional arguments/, their meaning depend on position in the function call. In this case these are alternatives to ~loc~ and ~scale~ below.
+
+  - ~**kwargs~ indicates keyword arguments. These can be ~loc~ for location parameter and ~scale~ for scale parameter of the distribution
+** Example of CDF
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+#+begin_src python :session hypothesis :exports code :results none
+  mu, sig = 0.0, 3.0
+  x = np.arange(mu - 4 * sig, mu+4 * sig, 0.1)
+  fig, ax = plt.subplots()
+  ax.plot(x,
+          stats.norm.pdf(x, loc=mu, scale=sig),
+          label='PDF')
+  ax.plot(x,
+          stats.norm.cdf(x, loc=mu, scale=sig),
+          label='CDF')
+  ax.legend()
+  fig.set_size_inches(4, 4)
+  fig.savefig('normal_distribution_cdf.png')
+#+end_src
+
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+#+ATTR_LATEX: :height 0.6\textheight
+[[file:./normal_distribution_cdf.png]]
+
+** Other function related to probability distributions
+
+- ~ppf(q, *args, **kwargs)~ is the percent point function (inverse of ~cdf~)
+- ~q~ is ~array_like~
+  - This is the lower-tail probability, the returned value ~x~ is the quantile corresponding to this $q = P(X \le x)$
+
+
+** Example of using ~ppf~ and ~cdf~
+
+#+begin_src python :session hypothesis :exports code :results none
+    mu, sig = 0.0, 2.0
+    q = stats.norm.cdf(1.0, mu, sig)
+    x = stats.norm.ppf(q, mu, sig)
+    print(f'CDF(x=1.0): P(N(0, 2) <= 1.0):', q)
+    print(f'PPF(q={q}): x such that P(N(0, 2) <= x) = q:', x)
+#+end_src
+
+** Example of using ~ppf~ and ~cdf~
+
+*** Columns                                                        :B_columns:
+:PROPERTIES:
+:BEAMER_env: columns
+:BEAMER_OPT: T,onlytextwidth
+:END:
+
+**** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+#+ATTR_LATEX: :options breaklines
+#+begin_src python :session hypothesis :exports code :results none
+  mu, sig = 0.0, 2.0
+  x = np.arange(mu - 4 * sig, mu + 4 * sig, 0.1)
+  fig, ax = plt.subplots(nrows=3)
+  ax[0].plot(x, stats.norm.pdf(x, loc=mu, scale=sig),
+          label='PDF')
+  q = stats.norm.cdf(x, loc=mu, scale=sig)
+  ax[1].plot(x, q, label='CDF')
+  ax[2].plot(q,
+          stats.norm.ppf(q, loc=mu, scale=sig),
+          label='PPF')
+  ax[0].set_title('PDF')
+  ax[1].set_title('CDF')
+  ax[2].set_title('PPF')
+  fig.set_size_inches(3, 6)
+  fig.tight_layout()
+  fig.savefig('normal_distribution_ppf.png')
+#+end_src
+
+**** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+#+ATTR_LATEX: :height 0.9\textheight
+[[file:./normal_distribution_ppf.png]]
+
+* t test with scipy
+** Back to the example
+You test a drug for reducing blood cholesterol  on 40 patients with high cholesterol (>= 200 mg/dL of serum). After 60 days there was an average decrease of 6.8 mg/dL and SD of 12.1 mg/dL. Was your drug effective at lowering cholesterol at 5% level of significance?
+
+\bigskip
+
+Taking $\mu$ as the average decrease of cholesterol,
+
+$H_{0}: \mu = 0$ vs $H_{1}: \mu \ne 0$
+
+\bigskip
+
+$T = \frac{\sqrt{n}}{S}(\bar{X} - \mu_{0}) = 3.554$
+
+\bigskip
+
+Find $t_{39,0.025}$.
+\bigskip
+What problems do you find in this study?
+
+** t-test using scipy
+Remember $t_{n-1, \alpha}$ is the value of the rv (on the x axis) such that $P(T \ge t_{n-1, \alpha}) = \alpha$
+
+\bigskip
+
+So, $P(T < t_{n-1, \alpha}) = 1 - \alpha$
+
+\bigskip
+
+this is $\text{cdf}(t_{n-1, \alpha})$ that is, we want to find x such that the CDF(x) is $1 - \alpha$ : this is what ~ppf~ gives us.
+
+#+begin_src python :session hypothesis :exports code
+  n, xbar, S, alpha = 40, 6.8, 12.1, 0.05
+  q = 1 - alpha/2
+  print(stats.t.ppf(q, df=n-1))
+  T = np.sqrt(n) * (xbar - 0)/S
+  pvalue = 2 * (1 - stats.t.cdf(T, df=n-1))
+  print(pvalue)
+#+end_src
+
+** t-test using scipy
+
+#+begin_src python :session hypothesis :exports none :results none
+  n, xbar, S, alpha = 40, 6.8, 12.1, 0.05
+  q = 1 - alpha/2
+  tn_1 = stats.t.ppf(q, df=n-1)
+  T = np.sqrt(n) * (xbar - 0)/S
+  pvalue = 2 * (1 - stats.t.cdf(T, df=n-1))
+  fig, ax = plt.subplots()
+  x = np.arange(-4, 4, 0.1)
+  ax.plot(x, stats.t.pdf(x, loc=0, scale=1, df=n-1))
+  ax.axvline(tn_1, color='red')
+  ax.annotate('$t_{39,0.025}$', (tn_1, -0.05), horizontalalignment='right', fontsize='xx-large')
+  ax.axvline(T, color='orange')
+  ax.axvline(-T, color='orange')
+  ax.axhline(0, color='gray')
+  ax.annotate(r'$T = \frac{\sqrt{n}}{S}(\bar{X} - \mu_{0})$', (T, -0.05), fontsize='xx-large')
+  ax.annotate('-T', (-T, -0.05), fontsize='xx-large')
+  ax.spines['left'].set_position(('data', 0))
+  ax.spines['top'].set_visible(False)
+  ax.spines['right'].set_visible(False)
+  ax.spines['bottom'].set_position(('data', 0))
+  ax.set_ylim(-0.1, 0.5)
+  fig.tight_layout()
+  fig.savefig('ttest_example.png')
+#+end_src
+
+#+CAPTION: As $T$ lies beyond $t_{39,0.025}$ in the t-distribution, we can reject the null hypothesis
+#+ATTR_LATEX: :height 0.8\textheight
+[[file:./ttest_example.png]]
+
+** t-test using scipy
+With real data you do not need to do the above mental gymnastics!
+\bigskip
+
+H0: mu = mu0 vs H1: mu != mu0
+
+- 1-sample t test (two sided): ~scipy.stats.ttest_1samp(x, mu0)~
+
+H0: mu <= mu0 vs H1: mu > mu0
+
+- 1-sample t test (one sided): ~scipy.stats.ttest_1samp(x, mu0, alternative='greater')~
+
+H0: mu >= mu0 vs H1: mu < mu0
+
+- 1-sample t test (one sided): ~scipy.stats.ttest_1samp(x, mu0, alternative='less')~
+
+
+where ~x~ is your array of data values.
+
+** Example 2 (modified from Sheldon Ross)
+A decade ago in an industrial area the mean pH level of rain was 5.2. The pH levels recorded of rainstorms in the past year were recorded to be: 6.1, 5.4, 4.8, 5.8, 6.6, 5.3, 6.1, 4.4, 3.9, 6.8, 6.5, 6.3. Has the pH level changed in the past 10 years? Assume 5% level of significance.
+
+- What are H0 and H1?
+
+** Example 2 (modified from Sheldon Ross)
+#+begin_src python :session hypothesis :exports code :results none
+  alpha = 0.05
+  mu = 5.2
+  data = [6.1, 5.4, 4.8, 5.8,
+          6.6, 5.3, 6.1, 4.4,
+          3.9, 6.8, 6.5, 6.3]
+  n = len(data)
+  q = 1 - alpha/2
+  tn_1 = stats.t.ppf(q, df=n-1)
+  xbar, S = np.mean(data), np.std(data, ddof=1)
+  T = np.sqrt(n) * (xbar - mu) / S
+  pvalue = 2 * (1 - stats.t.cdf(T, df=n-1))
+  print(f't(n-1, alpha/2) = {tn_1:.3}, T = {T:.4}, p value = {pvalue:.4}')
+#+end_src
+** Example 2 (modified from Sheldon Ross)
+#+begin_src python :session hypothesis :exports none :results none
+             fig, ax = plt.subplots()
+             x = np.arange(-4, 4, 0.1)
+             ax.plot(x, stats.t.pdf(x, loc=0, scale=1, df=n-1))
+             ax.axvline(tn_1, color='red')
+             ax.annotate(f'$t_{{{n-1},{alpha/2:.3}}} = {tn_1:.4}$',
+                         (tn_1, stats.t.pdf(tn_1, df=n-1)),
+                         fontsize='xx-large',
+                         horizontalalignment='right',
+                         rotation='vertical')
+             ax.axvline(T, color='orange')
+             ax.axvline(-T, color='orange')
+             ax.axhline(0, color='gray')
+             ax.annotate(rf'$T = \frac{{\sqrt{{n}}}}{{S}}(\bar{{X}} - \mu_{{0}}) = {T:.4}$',
+                         (T, stats.t.pdf(T, df=n-1)),
+                         fontsize='xx-large',
+                         horizontalalignment='right',
+                         rotation='vertical')
+             ax.annotate('-T', (-T, -0.05), fontsize='xx-large')
+             ax.spines['left'].set_position(('data', 0))
+             ax.spines['top'].set_visible(False)
+             ax.spines['right'].set_visible(False)
+             ax.spines['bottom'].set_position(('data', 0))
+             ax.set_ylim(-0.1, 0.5)
+             fig.set_size_inches(8, 5)
+             fig.tight_layout()
+             fig.savefig('ttest_example_2.png')
+#+end_src
+
+#+ATTR_LATEX: :height \textheight
+[[file:./ttest_example_2.png]]
+
+
+** Example 2 (modified from Sheldon Ross)
+All of the above can be done in a single line with ~scipy.stats.ttest_1samp()~:
+#+begin_src python :session hypothesis :exports both :results output
+print(stats.ttest_1samp(data, mu))
+#+end_src

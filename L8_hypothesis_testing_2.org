@@ -1,0 +1,100 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:nil ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 8: Hypothesis testing
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-08-18 Updated: \today
+#+LANGUAGE: eng
+
+* Hypothesis testing
+
+** A stratetgy for statistical hypothesis testing
+- You want to test a hypothesis regarding population distribution parameter $\theta$
+- For a given region $R$ your $H_{0}$ is that $\theta \in R$
+- Your $H_{1}$ is $\theta \notin R$
+- To develop a test for $H_{0}$ at significance $\alpha$
+  - Determine a point estimator of $\theta$ (say $\hat{\theta}$)
+  - Reject $H_{0}$ when $\hat{\theta}$ is far away from $R$ (how far?)
+  - Use the probability distribution of $\hat{\theta}$
+  - Reject if $P(H_{0} \text{is true}) \le \alpha$
+
+
+* Hypothesis test for normal population
+
+** Test for the mean of a normal population with /known variance/
+The population variance $\sigma^{2}$ is known, and we want to check if the population mean $\mu$ is equal to a specified value $\mu_{0}$ or not
+
+- H0: $\mu = \mu_{0}$
+- H1: $\mu \ne \mu_{0}$
+
+** Critical region
+- $\bar{X} = \frac{1}{n}\sum_{i=1}^{n}X_{i}$
+- If the sample mean is far away from $\mu_{0}$ we can reject H0
+- The critical region of the test $C = |\bar{X} - \mu_{0}| \ge c$ for some value $c$
+- For a significance level $\alpha$: when H0 is true, the probability that $\bar{X}$ differs from $\mu_{0}$ by $c$ or more
+  - $P(|\bar{X} - \mu_{0}| \ge c) = \alpha$ when $\mu = \mu_{0}$
+
+** Standardizing the estimator of mean
+- $P(|\bar{X} - \mu_{0}| \ge c) = \alpha$ when $\mu = \mu_{0}$
+- If $\mu = \mu_{0}$, $\bar{X} \sim \mathcal{N}(\mu_{0}, \sigma^{2}/n)$
+- So $Z = \frac{\bar{X} - \mu_{0}}{\sigma/\sqrt{n}} = \frac{\sqrt{n}}{\sigma}(\bar{X} - \mu_{0}) \sim \mathcal{N}(0, 1)$
+- Now, $|\bar{X} - \mu_{0}| \ge c \implies  \frac{\sqrt{n}}{\sigma}|\bar{X} - \mu_{0}| \ge \frac{\sqrt{n}}{\sigma} c \implies |Z| \ge \frac{\sqrt{n}}{\sigma} c$
+- Thus, when $\mu = \mu_{0}$,
+  - $P(|Z| \ge \frac{\sqrt{n}}{\sigma} c) = \alpha$
+  - $\implies 2 P\left(Z \ge \frac{\sqrt{n}}{\sigma} c\right) = \alpha$
+  - $\implies P\left(Z \ge \frac{\sqrt{n}}{\sigma} c\right) = \alpha/2$
+  - $\implies \frac{\sqrt{n}}{\sigma} c = z_{\alpha/2} \implies c = z_{\alpha/2}\frac{\sigma}{\sqrt{n}}$
+
+
+(remember $z_{\alpha}$ denotes the point on x axis such that $P(Z \ge z_{\alpha}) = \alpha$)
+
+** Rejecting H0 under known $\sigma$
+
+- $c = z_{\alpha/2}\frac{\sigma}{\sqrt{n}}$
+- Reject H0 when $|\bar{X} - \mu_{0}| \ge z_{\alpha/2}\frac{\sigma}{\sqrt{n}}$
+- or, if $\frac{\sqrt{n}}{\sigma}|\bar{X} - \mu_{0}| \ge z_{\alpha/2}$
+- This is called the Z-test
+
+#+ATTR_LATEX: :height 0.6\textheight
+[[file:./Ross_fig9.2.png]]
+
+** p-value
+The probability that the absolute value of test statistic would be as large as the computed value $v$ when H0 is true.
+
+* One-sided test
+
+** When H0: $\mu \le \mu_{0}$, H1: $\mu > \mu_{0}$
+We are often interested in knowing if the population mean greater than (or less than) a proposed value.
+
+- Reject H0 if $\sqrt{n}\frac{\bar{X} - \mu_{0}}{\sigma} \ge z_{\alpha}$
+#+ATTR_LATEX: :height 0.6\textheight
+[[file:./Ross_fig9.3.png]]
+
+** $p$ value
+Probability that $Z$ is at least as large as the computed value of the test statistic. If $v$ is the value of the test statistic,
+
+$p\text{-value} = P(Z \ge v)$
+
+For one-sided Z-test, $v = \sqrt{n}\frac{\bar{X} - \mu_{0}}{\sigma}$

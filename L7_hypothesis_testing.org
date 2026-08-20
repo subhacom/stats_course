@@ -1,0 +1,135 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:nil ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 7: Hypothesis testing
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-08-05 Updated: \today
+#+LANGUAGE: eng
+* Significant
+** XKCD: Significant
+[[https://xkcd.com/882/]]
+- "'So, uh, we did the green study again and got no link. It was probably a--' 'RESEARCH CONFLICTED ON GREEN JELLY BEAN/ACNE LINK; MORE STUDY RECOMMENDED!'"
+  - This is called “data mining”, also, “going on a fishing expedition”!
+- Look up “Brian Wansink”, there is an npr.org article
+* Hypothesis
+** XKCD: Hypothesis generation
+#+CAPTION: Frazzled scientists are requesting that everyone please stop generating hypotheses for a little bit while they work through the backlog.
+#+ATTR_LATEX: :height 0.8\textheight
+[[file:./hypothesis_generation_2x.png]]
+
+** Hypothesis in /statistics/
+“A statistical hypothesis is a statement about the nature of a population. It is often stated in terms of a population parameter.” - Sheldon M. Ross (Introductory Statistics)
+- Null hypothesis, H0, is the claim we want to disprove.
+- Alternative hypothesis, H1, is what we are actually trying to establish.
+
+** Example of hypothesis
+- You discovered a drug “Miraculin” for COVID-19
+- You want to show that it cures the disease
+- H0: Miraculin has no effect on COVID test result.
+- H1: After treatment with Miraculin, patients test negative for COVID.
+- You want to reject the null hypothesis.
+
+*In (empirical) science you never prove anything. You do not prove the alternate hypothesis.*
+
+** Null hypothesis has long been rejected
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+ATTR_LATEX: :height 0.8\textheight
+[[file:./null_hypothesis.png]]
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+"Hell, my eighth grade science class managed to conclusively reject it just based on a classroom experiment. It's pretty sad to hear about million-dollar research teams who can't even manage that."
+
+[[https://xkcd.com/892/]]
+
+** Rejecting or /failing to reject/ the null hypothesis
+- Rejecting H0 is a strong statement that it does not appear to be consistent with observed data.
+- Failing to reject H0 is a weak statement interpreted to mean that H0 is consistent with the data.
+- Decision errors:
+  - (I) Rejecting H0 when it is actually true. (probability=$\alpha$)
+  - (II) Failing to reject H0 when H1 is actually true. (probability=$\beta$)
+
+** Types of errors
+#+ATTR_LATEX: :height 0.8\textheight
+[[file:./hypothesis_error_types.png]]
+
+
+* Z-test for proportions
+
+** Test statistic
+- "A /test statistic/ is a statistic whose value is determined from the sample data. Depending on the value of this test statistic, the null hypothesis will be rejected or not."
+
+- "The /critical region/, also called the /rejection region/, is that set of values of the test statistic for which the null hypothesis is rejected."
+
+Sheldon M. Ross
+
+** Significance level
+- We fix a small significance level $\alpha$ and then require that the $P(\text{Reject H0 when H0 is true}) \le \alpha$
+
+* Hypotheis test for normal population
+
+** Test for the mean of a normal population with /known variance/
+The population variance $\sigma^{2}$ is known, and we want to check if the population mean $\mu$ is equal to a specified value $\mu_{0}$ or not
+
+- H0: $\mu = \mu_{0}$
+- H1: $\mu \ne \mu_{0}$
+
+** Critical region
+- $\bar{X} = \frac{1}{n}\sum_{i=1}^{n}X_{i}$
+- If the sample mean is far away from $\mu_{0}$ we can reject H0
+- The critical region of the test $C = |\bar{X} - \mu_{0}| \ge c$ for some value $c$
+- For a significance level $\alpha$: when H0 is true, the probability that $\bar{X}$ differs from $\mu_{0}$ by $c$ or more
+  - $P(|\bar{X} - \mu_{0}| \ge c) = \alpha$ when $\mu = \mu_{0}$
+
+* Example test
+
+** Quiz: With increasing sample size
+
+a) the S.E.M. decreases
+b) the S.E.M. increases
+c) the mean increases
+d) the mean decreases
+
+** A hypothesis about the quiz
+In a class of 58, 7 students gave incorrect answers, 51 gave correct answers.
+- H0: The class made a random guess
+- H1: The class performed better than chance level
+
+** Z-test for proportions
+- True proportion = $p$
+- Sample proportion = $\hat{p}$
+- For Bernoulli trial $\sigma^{2} = p (1 - p)$
+  - When $n$ is large enough that both $np$ and $n(1-p)$ are $> 5$, we can use the normal approximation to the binomial distribution.
+  - SEM = $\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}$
+
+* Science news cycle
+** The science news cycle
+#+CAPTION: https://phdcomics.com/comics/archive.php?comicid=1174
+#+ATTR_LATEX: :height \textheight
+[[file:./phd051809s.jpg]]
