@@ -1,0 +1,186 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:nil ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session odes
+
+#+TITLE: Lesson 10: Hypothesis testing - two populations
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-08-27 Updated: \today
+#+LANGUAGE: eng
+
+
+* Hypothesis testing for two populations with normal distribution and known variance
+
+
+** Equality of means of two normal populations with known variance
+- $X_{1}, X_{2}, \cdots , X_{n}$ are a sample from a normal population with mean $\mu_{x}$ and variance $\sigma_{x}^{2}$
+- $Y_{1}, Y_{2}, \cdots , Y_{m}$ is an independent sample from a normal population with mean $\mu_{y}$ and variance $\sigma_{y}^{2}$
+
+  \bigskip
+
+   $H_{0}: \mu_{x} = \mu_{y}$, $H_{1}: \mu_{x} \ne \mu_{y}$
+
+  \bigskip
+
+Estimator of $\mu_{x}$ : $\bar{X} = \frac{1}{n}\sum_{i=1}^{n} X_{i}$
+
+  \bigskip
+
+Estimator of $\mu_{y}$: $\bar{Y} = \frac{1}{m}\sum_{i=1}^{m} Y_{i}$
+
+** Equality of means of two normal populations with known variance
+For some constant $c$ a test should be
+
+
+
+1. Reject $H_{0}$ if $|\bar{X} - \bar{Y}| \ge c$
+2. Do not reject $H_{0}$ otherwise
+
+\bigskip
+
+- What should be $c$ for a significance level $\alpha$?
+- We can treat $\bar{X} - \bar{Y}$ as a new random variable.
+- Since both the populations are normal and we have independent samples, the difference should also be normally distributed.
+
+
+** Finding $c$
+We are looking for $\mu_{x} - \mu_{y}$ with $\bar{X}$ and $\bar{Y}$
+
+\bigskip
+
+$E[\bar{X} - \bar{Y}] = E[\bar{X}] - E[\bar{Y}] = \mu_{x} - \mu_{y}$
+
+\bigskip
+
+\begin{align*}
+\text{Var}(\bar{X} - \bar{Y}) &= \text{Var}(\bar{X}) + \text{Var}(-\bar{Y})\\
+&= \text{Var}(\bar{X}) + (-1)^{2}\text{Var}(\bar{Y})\\
+&=\text{Var}(\bar{X}) + \text{Var}(\bar{Y})\\
+&= \sigma_{x}^{2}/n + \sigma_{y}^{2}/m
+\end{align*}
+
+** Finding $c$
+If we standardize the new random variable $\bar{X} - \bar{Y}$, we can do the same thing as we did for a single sample.
+
+
+\bigskip
+
+$Z = \frac{(\bar{X} - \bar{Y}) - (\mu_{x} - \mu_{y})}{\sqrt{\sigma_{x}^{2}/n+\sigma_{y}^{2}/m}}$
+
+
+\bigskip
+
+When $H_{0}$ is true, $\text{TS} = \frac{\bar{X} - \bar{Y}}{\sqrt{\sigma_{x}^{2}/n + \sigma_{y}^{2}/m}}$ will have standard normal distribution.
+
+
+** Finding $c$
+We already saw,
+
+\bigskip
+
+$P(|Z| \ge z_{\alpha/2}) = 2 P(Z \ge z_{\alpha/2}) = \alpha$
+
+\bigskip
+
+We want to reject $H_{0}$ when $\text{TS}$ is large: Reject $H_{0}$ is $|\text{TS}| \ge z_{\alpha/2}$, fail to reject otherwise.
+
+\bigskip
+
+Alternatively, $\text{p value} = P(|Z| \ge |\text{TS}|) = 2 P(Z \ge |\text{TS}|)$
+
+** One-sided test
+When $H_{0}: \mu_{x} \le \mu_{y}$ and $H_{1}: \mu_{x} > \mu_{y}$
+
+\bigskip
+
+Reject $H_{0}$ at significance level $\alpha$ if $\text{TS} \ge z_{\alpha}$, fail to reject otherwise.
+
+\bigskip
+
+Alternatively,  $\text{p value} = P(Z \ge \text{TS})$
+
+** Large sample size with unknown variance (and other distributions)
+With large sample sizes we can use these results as the distribution of the standardized difference with estimates of mean and variance will be approximately standard normal.
+
+\bigskip
+
+
+Rule of thumb: more than 30 samples, usually 20 suffice
+
+\bigskip
+
+This works even if the underlying population distributions are not normal distributions, because of CLT.
+
+* Hypothesis testing for two populations with normal distribution but unknown variance
+
+** Equality of means of two independent small samples with equal but unknown variance
+Indpendent samples from two normal populations: $X_{1}, X_{2}, \cdots, X_{n}$ and $Y_{1}, Y_{2}, \cdots, Y_{m}$
+
+
+$\sigma_{x}^{2} = \sigma_{y}^{2} = \sigma^{2}$
+
+
+- $H_{0}: \mu_{x} = \mu_{y}$
+- $Z = \frac{(\bar{X} - \bar{Y}) - (\mu_{x} - \mu_{y})}{\sqrt{\sigma_{x}^{2}/n+\sigma_{y}^{2}/m}}$ has a standard normal distribution.
+- Under $H_{0}$, this resolves to $Z = \frac{(\bar{X} - \bar{Y})}{\sqrt{\sigma^{2}/n+\sigma^{2}/m}}$
+
+** Pooled estimator of $\sigma^{2}$
+- $S_{x}^{2}$ has $n-1$ degrees of freedom and $S_{y}^{2}$ has $m-1$ degrees of freedom
+
+- The pooled estimaror of $\sigma^{2}$ is $S_{p}^{2}$
+
+- $S_{p}^{2}$ is a weighted sum of the sample variances
+
+- $S_{p}^{2} = \frac{n-1}{n+m-2}S_{x}^{2} + \frac{m-1}{n+m-2}S_{y}^{2}$ has $n+m-2$ degrees of freedom
+
+** t-test for equality of means for small samples assuming equal population variance and independent samples
+- When $H_{0}$ is true, $\frac{(\bar{X} - \bar{Y})}{\sqrt{S_{p}^{2}/n+S_{p}^{2}/m}}$ has a t-distribution with $n + m - 2$ degrees of freedom
+
+- $\text{TS} = \frac{\bar{X} - \bar{Y}}{S_{p}\sqrt{1/n + 1/m}}$
+
+- At significance level $\alpha$ reject $H_{0}$ if $|\text{TS}| \ge t_{n+m-2,\alpha/2}$, fail to reject otherwise
+
+- $p \text{-value} = P(|T_{n+m-2}| \ge |v|) = 2 P(T_{n+m-2} \ge |v|)$
+
+- For $H_{0}: \mu_{x} \le \mu_{y}$,
+
+  - Reject if $\text{TS} \ge t_{n+m-2, \alpha}$
+
+  - $p \text{-value} = P(T_{n+m-2} \ge v)$
+
+** Paired-sample (or related sample) t-test
+We have two samples from two normal populations: $X_{1}, X_{2}, \cdots, X_{n}$ and $Y_{1}, Y_{2}, \cdots, Y_{n}$, but there is a relationship between $X_{i}$ and $Y_{i}$. They are not independent.
+
+\bigskip
+
+We want to test $H_{0}: \mu_{x} = \mu_{y}$ against $H_{1}: \mu_{x} \ne \mu_{y}$
+
+\bigskip
+
+We can look at the differences $D_{i} = X_{i} - Y_{i}$
+- $E[D_{i}] = E[X_{i}] - E[Y_{i}]$
+- Or, $\mu_{d} = \mu_{x} - \mu_{y}$
+- Under $H_{0}$, $\mu_{d} = 0$
+
+\bigskip
+$\text{TS} = \sqrt{n}\frac{\bar{D}}{S_{d}}$ is t-distributed with $n-1$ degrees of freedom - one-sample t-test

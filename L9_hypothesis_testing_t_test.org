@@ -405,32 +405,32 @@ A decade ago in an industrial area the mean pH level of rain was 5.2. The pH lev
 #+end_src
 ** Example 2 (modified from Sheldon Ross)
 #+begin_src python :session hypothesis :exports none :results none
-             fig, ax = plt.subplots()
-             x = np.arange(-4, 4, 0.1)
-             ax.plot(x, stats.t.pdf(x, loc=0, scale=1, df=n-1))
-             ax.axvline(tn_1, color='red')
-             ax.annotate(f'$t_{{{n-1},{alpha/2:.3}}} = {tn_1:.4}$',
-                         (tn_1, stats.t.pdf(tn_1, df=n-1)),
-                         fontsize='xx-large',
-                         horizontalalignment='right',
-                         rotation='vertical')
-             ax.axvline(T, color='orange')
-             ax.axvline(-T, color='orange')
-             ax.axhline(0, color='gray')
-             ax.annotate(rf'$T = \frac{{\sqrt{{n}}}}{{S}}(\bar{{X}} - \mu_{{0}}) = {T:.4}$',
-                         (T, stats.t.pdf(T, df=n-1)),
-                         fontsize='xx-large',
-                         horizontalalignment='right',
-                         rotation='vertical')
-             ax.annotate('-T', (-T, -0.05), fontsize='xx-large')
-             ax.spines['left'].set_position(('data', 0))
-             ax.spines['top'].set_visible(False)
-             ax.spines['right'].set_visible(False)
-             ax.spines['bottom'].set_position(('data', 0))
-             ax.set_ylim(-0.1, 0.5)
-             fig.set_size_inches(8, 5)
-             fig.tight_layout()
-             fig.savefig('ttest_example_2.png')
+  fig, ax = plt.subplots()
+  x = np.arange(-4, 4, 0.1)
+  ax.plot(x, stats.t.pdf(x, loc=0, scale=1, df=n-1))
+  ax.axvline(tn_1, color='red')
+  ax.annotate(f'$t_{{{n-1},{alpha/2:.3}}} = {tn_1:.4}$',
+              (tn_1, stats.t.pdf(tn_1, df=n-1)),
+              fontsize='xx-large',
+              horizontalalignment='right',
+              rotation='vertical')
+  ax.axvline(T, color='orange')
+  ax.axvline(-T, color='orange')
+  ax.axhline(0, color='gray')
+  ax.annotate(rf'$T = \frac{{\sqrt{{n}}}}{{S}}(\bar{{X}} - \mu_{{0}}) = {T:.4}$',
+              (T, stats.t.pdf(T, df=n-1)),
+              fontsize='xx-large',
+              horizontalalignment='right',
+              rotation='vertical')
+  ax.annotate('-T', (-T, -0.05), fontsize='xx-large')
+  ax.spines['left'].set_position(('data', 0))
+  ax.spines['top'].set_visible(False)
+  ax.spines['right'].set_visible(False)
+  ax.spines['bottom'].set_position(('data', 0))
+  ax.set_ylim(-0.1, 0.5)
+  fig.set_size_inches(8, 5)
+  fig.tight_layout()
+  fig.savefig('ttest_example_2.png')
 #+end_src
 
 #+ATTR_LATEX: :height 0.9\textheight
