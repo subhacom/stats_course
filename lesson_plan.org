@@ -12,3 +12,21 @@
    empirical mean np = 10 * 0.5, variance = np * (1-p)
 ** IID: unless you return the beans to the bowl, p changes - no more independent and identically distributed
 ** Sample vs population
+* Hypothesis testing
+** Test of two groups
+- Z-test, t-test - single sample
+- Z-test, t-test - two independent samples
+- Z-test, t-test - two related samples
+* Analysis of Variance (ANOVA)
+- One-way ANOVA
+- Two-way ANOVA
+* Linear regression
+* Dimensionality reduction
+** PCA
+** umap
+** tsne
+** LLE (locally linear embedding)
+* Clustering
+* Classification
+* Mixed-effect models
+* GLM
