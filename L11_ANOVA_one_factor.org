@@ -124,7 +124,7 @@ For a given significance level $\alpha$, we can reject $H_{0}$ if $\text{TS} \ge
 
 \bigskip
 
-Alternatively, we can report $p\text{-value} = P(X \ge TS) = P(F_{k-1, k (n-1)}\ge \text{TS})$.
+Alternatively, we can report $p\text{-value} = P(F_{k-1, k (n-1)}\ge \text{TS})$.
 #+begin_src python :session L11 :results none :output none :exports none
   import numpy as np
   import matplotlib.pyplot as plt

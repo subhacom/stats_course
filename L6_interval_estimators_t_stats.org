@@ -82,9 +82,9 @@ Therefore, $E\left[\sum_{i=1}^{n}Z_{i}^{2}\right] = \sum_{i=1}^{n}E[Z_{i}^{2}] =
 - $\bar{X} \pm \frac{S}{\sqrt{n}}t_{n-1, \alpha/2}$ is a $100(1 - \alpha)$ percent CI estimator for population mean
 ** If we are only interested in whether $\mu$ is above or below some value
 - A $100 (1- \alpha)$ lower confidence bound for $\mu$ is $\bar{X} - z_{\alpha} \frac{\sigma}{\sqrt{n}}$
-  - For unknown variance: $\bar{X} - t_{n-1,\alpha} \frac{\bar{S}}{\sqrt{n}}$
+  - For unknown variance: $\bar{X} - t_{n-1,\alpha} \frac{S}{\sqrt{n}}$
 - A $100 (1- \alpha)$ upper confidence bound for $\mu$ is $\bar{X} + z_{\alpha} \frac{\sigma}{\sqrt{n}}$
-  - For unknown variance: $\bar{X} + t_{n-1,\alpha} \frac{\bar{S}}{\sqrt{n}}$
+  - For unknown variance: $\bar{X} + t_{n-1,\alpha} \frac{S}{\sqrt{n}}$
 - Note that we are using $z_{\alpha}$ as opposed to of $z_{\alpha/2}$ for CI (why?)
 * Sample size
 ** How many samples do you need to be 90% certain that your sample mean is correct within $\pm 0.1$ units?

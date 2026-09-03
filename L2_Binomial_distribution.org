@@ -54,7 +54,7 @@
 - Mean (average) is the centre of mass, where $p$ is the probability density
 - It is a /measure of central tendency/ (where does the centre of the distribution lie?)
 - Population mean $\mu$
-- Sample mean E(x) = $\bar{X} = \sum_{i} p_{i} x_{i}$
+- Sample mean $\bar{X} = \sum_{i} p_{i} x_{i}$
 - If every outcome $x_{i}$ has equal probability $p_{i} = p$, it must be $1/n$
 - In that case, $\bar{X} = \sum_{i} (1/n) x_{i} = \frac{\sum x_{i}}{n}$
 ** Addition and multiplication of constant

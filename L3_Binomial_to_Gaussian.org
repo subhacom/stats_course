@@ -68,7 +68,7 @@
 - Two scripts for simulating Bernoulli trials (N-draws of beans) and plotting the histogram of sanple means are [[./scripts/binomial_to_gaussian.py]] and [[./scripts/binomial_to_gaussian_v2.py]]
 * Theory
 ** Weak Law of large numbers
-Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon > 0$, $\lim_{n \to \infty} P(|\bar{X} - \mu | < \epsilon) = 0$
+Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon > 0$, $\lim_{n \to \infty} P(|\bar{X} - \mu | \ge \epsilon) = 0$
 ** Central limit theorem (CLT)
 Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$ and finite nonzero variance $\sigma^{2}$. Then the random variable $Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{N}}$ converges in distribution to the standard normal random variable as $N \to \infty$
 

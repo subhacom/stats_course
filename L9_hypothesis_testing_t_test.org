@@ -329,7 +329,7 @@ this is $\text{cdf}(t_{n-1, \alpha})$ that is, we want to find x such that the C
   q = 1 - alpha/2
   print(stats.t.ppf(q, df=n-1))
   T = np.sqrt(n) * (xbar - 0)/S
-  pvalue = 2 * (1 - stats.t.cdf(T, df=n-1))
+  pvalue = 2 * (1 - stats.t.cdf(abs(T), df=n-1))
   print(pvalue)
 #+end_src
 
@@ -340,7 +340,7 @@ this is $\text{cdf}(t_{n-1, \alpha})$ that is, we want to find x such that the C
   q = 1 - alpha/2
   tn_1 = stats.t.ppf(q, df=n-1)
   T = np.sqrt(n) * (xbar - 0)/S
-  pvalue = 2 * (1 - stats.t.cdf(T, df=n-1))
+  pvalue = 2 * (1 - stats.t.cdf(abs(T), df=n-1))
   fig, ax = plt.subplots()
   x = np.arange(-4, 4, 0.1)
   ax.plot(x, stats.t.pdf(x, loc=0, scale=1, df=n-1))
@@ -400,7 +400,7 @@ A decade ago in an industrial area the mean pH level of rain was 5.2. The pH lev
   tn_1 = stats.t.ppf(q, df=n-1)
   xbar, S = np.mean(data), np.std(data, ddof=1)
   T = np.sqrt(n) * (xbar - mu) / S
-  pvalue = 2 * (1 - stats.t.cdf(T, df=n-1))
+  pvalue = 2 * (1 - stats.t.cdf(abs(T), df=n-1))
   print(f't(n-1, alpha/2) = {tn_1:.3}, T = {T:.4}, p value = {pvalue:.4}')
 #+end_src
 ** Example 2 (modified from Sheldon Ross)
