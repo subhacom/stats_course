@@ -30,6 +30,10 @@
 * Theory
 ** Weak Law of large numbers
 Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$. Then for any $\epsilon > 0$, $\lim_{N \to \infty} P(|\bar{X} - \mu | \ge \epsilon) = 0$
+
+\bigskip
+
+Intuitively speaking, the sample mean $\bar{X}$ converges to the population mean $\mu$ as $N$ increases.
 ** Central limit theorem (CLT)
 Let $X_{1}, X_{2}, \cdots X_{N}$ be iid random variables each having finite expected value $\mu$ and finite nonzero variance $\sigma^{2}$. Then the random variable $Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{N}}$ converges in distribution to the standard normal random variable as $N \to \infty$
 

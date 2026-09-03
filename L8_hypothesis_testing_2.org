@@ -32,13 +32,14 @@
 
 ** A stratetgy for statistical hypothesis testing
 - You want to test a hypothesis regarding population distribution parameter $\theta$
-- For a given region $R$ your $H_{0}$ is that $\theta \in R$
+- For a given region $R$ your $H_{0}$ is that the value of $\theta$ lies in that region ($\theta \in R$)
 - Your $H_{1}$ is $\theta \notin R$
 - To develop a test for $H_{0}$ at significance $\alpha$
   - Determine a point estimator of $\theta$ (say $\hat{\theta}$)
   - Reject $H_{0}$ when $\hat{\theta}$ is far away from $R$ (how far?)
-  - Use the probability distribution of $\hat{\theta}$
-  - Reject if $P(H_{0} \text{is true}) \le \alpha$
+    - Use the probability distribution of $\hat{\theta}$
+    - Choose $R$ such that  $P(\hat{\theta} \in R \mid H_{0}) = 1 - \alpha$
+    - Reject if $\hat{\theta}\notin \text{R}$
 
 
 * Hypothesis test for normal population
