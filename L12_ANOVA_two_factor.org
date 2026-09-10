@@ -1,0 +1,469 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:nil ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session L12 :tangle scripts/L12_two_factor_ANOVA_1.py
+
+#+TITLE: Lesson 12: Analysis of Variance (ANOVA) - two factors
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-09-08 Updated: \today
+#+LANGUAGE: eng
+
+
+* Hypothesis testing for more than two factors
+** Factorial design
+- For one-way ANOVA we had only one categorical variable
+- You want to see the effect of two categorical variables on a continuous variable - the first two are the independent variables and the last is the dependent variable (also called response)
+- Examples:
+  - Growth of two strains of a bacteria/cells in three different culture media
+  - Production of two varieties of wheat in three different soil types (sandy, loamy, clay)
+  - If race or gender influence starting salary of students
+  - If major or college category influence starting salary of students
+** Hypotheses to test for categorical variables A and B
+1. Interaction effect (AxB): Are the effects of factor A and B independent of one another?
+   - $H_{0}:$ There is no interaction between factors
+   - $H_{1}:$ There is a significant interaction between factors
+2. Main effect of factor A: Does the dependent variable differ across the levels of factor A, averaging over factor B?
+   - $H_{0}:$ There is no effect of factor A on the response variable
+   - $H_{1}:$ There is a significant effect of factor A on the response variable
+3. Main effect of factor B: Does the dependent variable differ across the levels of factor B, averaging over factor A?
+   - $H_{0}:$ There is no effect of factor B on the response variable
+   - $H_{1}:$ There is a significant effect of factor B on the response variable
+
+If there is a significant interaction, then ignore hypotheses for the main effect. Otherwise, proceed to test the main effects.
+** Assumptions for 2-way ANOVA
+- Independent observations
+- Each group has approximately equal variance
+- Data is approximately normally distributed
+- Samples from different treatments are independent
+
+** The rectangular arrangement of data
+In the simplest case, we have one observation for each pair of levels
+
+#+ATTR_LATEX: :align |l|c|c|c|
+| Category/Factor/Level | Soil 1   | Soil 2  | Soil 3   |
+|-----------------------+----------+---------+----------|
+| Strain 1              | $X_{11}$ | $X_{12}$ | $X_{13}$ |
+|-----------------------+----------+---------+----------|
+| Strain 2              | $X_{21}$ | $X_{22}$ | $X_{23}$ |
+
+
+
+** Formula for two-factor ANOVA
+The underlying model: For row i, column j, $\mu_{ij} = \mu + \alpha_{i} + \beta_{j}$
+
+\bigskip
+
+Effect of factor A: $H_{0}: \mu_{1j} = \mu_{2j}  = \mu + \beta_{j}$, i.e., $\alpha_{1} = \alpha_{2} = 0$, $H_{1}:$ At least one of the strain effects is different from the others.
+
+Effect of factor B: $H_{0}: \mu_{i1} = \mu_{i2} = \mu_{i3}  = \mu + \alpha_{i}$, i.e., $\beta_{1} = \beta_{2} = \beta_{3} = 0$, $H_{1}:$ At least one of the soil effects is different from the others.
+
+With just one observation per cell we cannot measure variation within a treatment, nor can we check interaction between factors.
+
+\bigskip
+
+The variation can be partitioned into /sum of squares/ ($SS$).
+
+$SS_{total} = SS_{A} + SS_{B} + SS_{E}$
+
+** Formula for two-factor ANOVA
+#+LATEX: {\renewcommand{\arraystretch}{2}
+#+ATTR_LATEX: :align |l|c|c|c|c| :font \scriptsize
+| Category/Factor/Level | Soil 1                             | Soil 2                             | Soil 3                             | Strain means ($X_{i.}$)                                                  |
+|-----------------------+------------------------------------+------------------------------------+------------------------------------+--------------------------------------------------------------------------|
+| Strain 1              | $X_{11}$                           | $X_{12}$                           | $X_{13}$                           | $X_{1.}=\frac{X_{11} + X_{12} + X_{13}}{3}$                              |
+|-----------------------+------------------------------------+------------------------------------+------------------------------------+--------------------------------------------------------------------------|
+| Strain 2              | $X_{21}$                           | $X_{22}$                           | $X_{23}$                           | $X_{2.}=\frac{X_{21} + X_{22} + X_{23}}{3}$                              |
+|-----------------------+------------------------------------+------------------------------------+------------------------------------+--------------------------------------------------------------------------|
+| Soil means ($X_{.j}$) | $X_{.1}=\frac{X_{11} + X_{21}}{2}$ | $X_{.2}=\frac{X_{12} + X_{22}}{2}$ | $X_{.3}=\frac{X_{13} + X_{23}}{2}$ | $X_{..} = \frac{X_{11} + X_{12} + X_{13} + X_{21} + X_{22} + X_{23}}{6}$ |
+#+LATEX: }
+
+
+
+** Formula for two-factor ANOVA
+- We can estimate $\sigma^{2}$ noting that the sum of squares of $N$ normal rvs is a chi-squared rv with $N$ degrees of freedom.
+- We take the sum of squares of $a b$ standardized variables $\frac{X_{ij} - \mu_{ij}}{\sigma}$
+
+  #+begin_export latex
+  \begin{gather*}
+  \frac{1}{\sigma^{2}}\sum_{i=1}^{a}\sum_{j=1}^{b}(X_{ij} - \mu_{ij})^{2}\\
+  = \frac{1}{\sigma^{2}}\sum_{i=1}^{a}\sum_{j=1}^{b}(X_{ij} - (\mu + \alpha_{i} + \beta_{j}))^{2}\\
+  = \frac{1}{\sigma^{2}}\sum_{i=1}^{a}\sum_{j=1}^{b}(X_{ij} - \mu - \alpha_{i} - \beta_{j})^{2}
+  \end{gather*}
+  #+end_export
+
+** Formula for two-factor ANOVA
+- For $\alpha_{1} \cdots \alpha_{a}$ we need to estimate $a - 1$ parameters, the $a$-th $\alpha$ is already determined by the others because $\sum_{i=1}^{a}\alpha_{i} = 0$
+- For $\beta_{1} \cdots \beta_{b}$ we need to estimate $b - 1$ parameters, the $b$-th $\beta$ is already determined by the others because $\sum_{i=1}^{b}\beta_{i} = 0$
+- For estimating $\mu$ we use 1 degree of freedom
+- From a total $ab$ dof, we are losing $1 + (a-1) + (b-1) = a + b - 1$ dof to estimate all these parameters
+- $\frac{\sum_{i=1}^{a} \sum_{j=1}^{b} (X_{ij} - \hat{\mu} - \hat{\alpha}_{i} - \hat{\beta}_{j})^{2}}{\sigma^{2}}$ is a chi-square rv with $ab - (a + b -1) = (a - 1)(b-1)$ dof
+
+** Formula for two-factor ANOVA
+#+begin_export latex
+\begin{align*}
+\hat{\mu} &= X_{..}\\
+\hat{\alpha_{i}} &= X_{i.} - X_{..}\\
+\hat{\beta_{j}} &= X_{.j} - X_{..}\\
+\end{align*}
+\text{thus}\\
+\begin{align*}
+\hat{\mu} + \hat{\alpha_{i}} + \hat{\beta_{j}} &= X_{..} + X_{i.} - X_{..} + X_{.j} - X_{..}\\
+&= X_{i.} + X_{.j} - X_{..}
+\end{align*}
+#+end_export
+
+** Formula for two-factor ANOVA
+Thus, $\frac{\sum_{i=1}^{a} \sum_{j=1}^{b} (X_{ij} - \hat{\mu} - \hat{\alpha}_{i} - \hat{\beta}_{j})^{2}}{\sigma^{2}} = \frac{\sum_{i=1}^{a} \sum_{j=1}^{b} (X_{ij} - X_{i.} - X_{.j} + X_{..})^{2}}{\sigma^{2}}$ is a chi-square rv with $\text{dof} = (a - 1)(b-1)$
+
+\bigskip
+
+We calculate sum of squared errors, $\text{SS}_{E} = \sum_{i=1}^{a} \sum_{j=1}^{b} (X_{ij} - X_{i.} - X_{.j} + X_{..})^{2}$
+
+\bigskip
+
+Since chi-square rv $X$ with $\text{dof}=n$ has $E[X] = n$,
+
+\bigskip
+
+
+$E\left[\frac{\text{SS}_{E}}{\sigma^{2}}\right] = (a - 1)(b - 1) \implies E[\frac{\text{SS}_{E}}{(a-1)(b-1)}] = \sigma^{2}$
+
+\bigskip
+
+Thus,  $\frac{\text{SS}_{E}}{(a-1)(b-1)}$ is an unbiased estimator of population variance $\sigma^{2}$
+
+** Formula for two-factor ANOVA
+When trying to test $H_{0}: \alpha_{i} = 0$ for all $i$, we can obtain a second estimator of $\sigma^{2}$.
+
+Under $H_{0}$, $E[X_{i.}] = \mu + \alpha_{i} = \mu$
+
+As $X_{i.}$ is the mean of $b$ random variables, each with variance $\sigma^{2}$, $\text{Var}(X_{i.}) = \frac{\sigma^{2}}{b}$
+
+\bigskip
+
+Thus, when $H_{0}$ is true, $\frac{\sum_{i=1}^{a}(X_{i.} - E[X_{i.}])^{2}}{\text{Var}(X_{i.})} = \frac{b}{\sigma^{2}}\sum_{i=1}^{a}(X_{i.} - E[X_{i.}])^{2}$ is chi-squared with $\text{dof} = (a - 1)$
+
+** Formula for two-factor ANOVA
+
+We define $\text{SS}_{A} = b \sum_{i=1}^{a}(X_{i.} - E[X_{i.}])^{2}$
+
+\bigskip
+
+Then, $E\left[\frac{\text{SS}_{A}}{\sigma^{2}}\right] = a - 1 \implies E\left[\frac{\text{SS}_{A}}{a-1}\right] = \sigma^{2}$
+
+\bigskip
+
+Like one-way ANOVA, the ratio of these two estimators of $\sigma^{2}$ has the F-distribution with $(a-1)$ numerator-dof and $(a-1)(b-1)$ denominator-dof: $F_{a-1, (a-1)(b-1)}$
+
+\bigskip
+
+Thus, $\text{TS} = \frac{\text{SS}_{A}/(a-1)}{\text{SS}_{E}/((a-1)(b-1))} \sim F_{a-1, (a-1)(b-1)}$
+
+Defining $\text{SS}_{A}/(a-1) = \text{MS}_{A}$, $\text{SS}_{E}/((a-1)(b-1)) = \text{MS}_{E}$, $TS = \frac{\text{MS}_{A}}{\text{MS}_{E}}$
+
+- Reject $H_{0}$  at significance level $\alpha$ if $\text{TS} \ge F_{a-1, (a-1)(b-1), \alpha}$
+
+
+** Two-way ANOVA with interaction: multiple data points for each treatment combo
+
+Usually, you will have multiple observations for each pair of levels
+
+#+ATTR_LATEX: :align |l|c|c|c| :font \scriptsize
+| Category/Factor/Level | Soil 1                                        | Soil 2                              | Soil 3                              |
+|-----------------------+-----------------------------------------------+-------------------------------------+-------------------------------------|
+| Strain 1              | $x_{111}, x_{112}, \cdots, x_{11k}$           | $x_{121}, x_{122}, \cdots, x_{12k}$ | $x_{131}, x_{132}, \cdots, x_{13k}$ |
+|-----------------------+-----------------------------------------------+-------------------------------------+-------------------------------------|
+| Strain 2              | $x_{211}, x_{212}, \cdots, x_{21k}$           | $x_{221}, x_{222}, \cdots, x_{22k}$ | $x_{231}, x_{232}, \cdots, x_{23k}$ |
+
+** Sample means
+
+- Assuming $a$ levels of $A$, $b$ levels of $B$, and $r$ data points in each group, you can imagine the dataset as a 3 dimensional array, $a$ rows (height), $b$ columns (width), and $r$ depth.
+- Entry $X_{ijk}$ is the entry in row $i$, column $j$, depth $k$.
+- Our model of the mean now can include an interaction term $\mu_{ij} = \mu + \alpha_{i} + \beta_{j} + \gamma_{ij}$, where $\gamma_{ij}$ represents additional change over the population mean due to interactions between the factors.
+- In the notation below, we indicate a dimension being averaged/summed by replacing the index with "$\cdot$" .
+
+  For example $X_{.j.}$ is the average for column $j$, averaging over all rows and samples that are in column $j$.
+** Sample means
+
+#+begin_export latex
+\begin{align*}
+X_{i..} &= \frac{1}{br}\sum_{j=1}^{b}\sum_{k=1}^{r}X_{ijk}\\
+X_{.j.} &= \frac{1}{ar}\sum_{i=1}^{a}\sum_{k=1}^{r}X_{ijk}\\
+X_{ij.} &= \frac{1}{r}\sum_{k=1}^{r}X_{ijk}\\
+X_{...} &= \frac{1}{abr}\sum_{i=1}^{a}\sum_{j=1}^{b} \sum_{k=1}^{r}X_{ijk}
+\end{align*}
+#+end_export
+
+
+** Sum of squares
+
+Like the variance estimation for one-way ANOVA, and taking the ratio of two estimates of the variance, $\text{Var}_{A} = \frac{1}{a-1}\sum_{i=1}^{a}(X_{i..} - X_{...})^{2}$
+
+#+begin_export latex
+{\small
+\begin{align*}
+\text{SS}_{A} &= rb \sum_{i=1}^{a}(X_{i..} - X_{...})^{2}\\
+\text{SS}_{B} &= ra \sum_{j=1}^{b}(X_{.j.} - X_{...})^{2}\\
+\text{SS}_{AB} &= r \sum_{j=1}^{b} \sum_{i=1}^{a}(X_{ij.} - X_{i..} - X_{.j.} + X_{...})^{2}\\
+\text{SS}_{E} &= \sum_{k=1}^{r} \sum_{j=1}^{b} \sum_{i=1}^{a}(X_{ijk} - X_{ij.})^{2}\\
+\text{SS}_{total} &= \sum_{k=1}^{r} \sum_{j=1}^{b} \sum_{i=1}^{a}(X_{ijk} - X_{...})^{2}
+\end{align*}
+}
+#+end_export
+
+- $\text{SS}_{E}$ is also called /within treatment/ sum of squares
+
+- It can be shown that $SS_{total} = SS_{A} + SS_{B} + SS_{AB} + SS_{E}$
+
+** ANOVA table for $a\times b$ factorial experiment
+
+For $N = abr$ data points,
+
+#+ATTR_LATEX: :align |l|c|c|c|
+| Source      | SS           | df           | Mean Square                      |
+|-------------+--------------+--------------+----------------------------------|
+| Factor A    | $SS_{A}$     | $a-1$        | $MS_{A} = SS_{A}/(a-1)$          |
+|-------------+--------------+--------------+----------------------------------|
+| Factor B    | $SS_{B}$     | $b - 1$      | $MS_{B} = SS_{B}/(b-1)$          |
+|-------------+--------------+--------------+----------------------------------|
+| Interaction | $SS_{AB}$    | $(a-1)(b-1)$ | $MS_{AB} = SS_{AB}/((a-1)(b-1))$ |
+|-------------+--------------+--------------+----------------------------------|
+| Error       | $SS_{E}$     | $N - ab$     | $MS_{E} = SS_{E}/(N - ab)$       |
+|-------------+--------------+--------------+----------------------------------|
+| Total       | $SS_{total}$ | $N - 1$      |                                  |
+** ANOVA table for $a\times b$ factorial experiment: fixed effect, random effect, and mixed effect models
+
+When the levels of each factor are chosen deliberately, it is called a *fixed effect model*. When they are chosen randomly from many possible levels, it is called a *random effect model*. When one factor has fixed levels, but the other one's levels are a random sample from all possible levels, it is called a *mixed effect model*.
+
+In fixed effect model, $\alpha_{i}$, $\beta_{j}$ are fixed constants. In random effect model, they are random variables themselves.
+
+** ANOVA table for $a\times b$ factorial experiment: fixed effect model
+
+#+ATTR_LATEX: :align |l|c|c|c|c|
+| Source      | SS           | df           | Mean Square                      | F ratio                        |
+|-------------+--------------+--------------+----------------------------------+--------------------------------|
+| Factor A    | $SS_{A}$     | $a-1$        | $MS_{A} = SS_{A}/(a-1)$          | $\text{MS}_{A}/\text{MS}_{E}$  |
+|-------------+--------------+--------------+----------------------------------+--------------------------------|
+| Factor B    | $SS_{B}$     | $b - 1$      | $MS_{B} = SS_{B}/(b-1)$          | $\text{MS}_{B}/\text{MS}_{E}$  |
+|-------------+--------------+--------------+----------------------------------+--------------------------------|
+| Interaction | $SS_{AB}$    | $(a-1)(b-1)$ | $MS_{AB} = SS_{AB}/((a-1)(b-1))$ | $\text{MS}_{AB}/\text{MS}_{E}$ |
+|-------------+--------------+--------------+----------------------------------+--------------------------------|
+| Error       | $SS_{E}$     | $N - ab$     | $MS_{E} = SS_{E}/(N - ab)$       |                                |
+|-------------+--------------+--------------+----------------------------------+--------------------------------|
+| Total       | $SS_{total}$ | $N - 1$      |                                  |                                |
+
+** Calculating F-statistics for the hypotheses
+1. $H_{0}:$ There is no interaction between A and B, i.e., the effect of one categorical variable does not depend on the other
+
+   $F_{AB} = \frac{MS_{AB}}{MS_{E}}$ is distributed as $F_{(a-1)(b-1), N - ab}$
+
+   Reject when $F_{AB} \ge F_{(a-1)(b-1), N - ab, \alpha}$
+
+2. $H_{0}:$ There is no effect of factor A on the means, i.e., $\mu_{A_{1}} = \mu_{A_{2}} = \cdots = \mu_{A_{a}}$
+
+   $F_{A} = \frac{MS_{A}}{MS_{E}}$ is distributed as $F_{a-1, N - ab}$
+
+   Reject when $F_{A} \ge F_{a-1, N - ab, \alpha}$
+
+3. $H_{0}:$ There is no effect of factor B on the means, i.e., $\mu_{B_{1}} = \mu_{B_{2}} = \cdots = \mu_{B_{b}}$
+
+   $F_{B} = \frac{MS_{B}}{MS_{E}}$ is distributed as $F_{b-1, N - ab}$
+
+   Reject when $F_{B} \ge F_{b-1, N - ab, \alpha}$
+
+* Two-factor ANOVA in Python
+
+** Two-factor ANOVA in Python
+Calculations by hand are tedious. Doing 2-factor ANOVA in Python is easier.
+#+LATEX: {\scriptsize
+/Credit: The numbers for this example is adapted from [[https://milnepublishing.geneseo.edu/natural-resources-biometrics/chapter/chapter-6-two-way-analysis-of-variance/][Natural Resources Biometrics Copyright © 2014 by Diane Kiernan]]/
+
+#+begin_src python  :exports code :results none
+  import numpy as np
+  from scipy   import stats
+  data = np.array([ # Soil_1, Soil_2, Soil_3, Soil_4
+        [[7.8, 9.1, 10.6], [11.2, 12.7, 13.3], [12.1, 12.5, 14.1], [9.1, 10.7, 12.6]],  # Strain 1
+        [[8.0, 8.7, 10.0], [11.3, 12.9, 13.8], [13.8, 14.3, 15.4], [11.3, 12.7, 14.3]], # Strain 2
+        [[15.3, 16.0, 17.6], [16.8, 18.3, 19.2], [17.9, 21.0, 20.7], [17.2, 18.3, 19.1]] # Strain 3
+        ])
+  print('Data:\n', data)
+  print('Dimensions:', data.shape)
+#+end_src
+#+LATEX: }
+
+Here the innermost dimension (third) is that samples for each pair of levels: $r=3$, the second dimension is the number of soil types, $b=4$ the first dimension is the number of strains $a = 3$.
+
+** Two-factor ANOVA in Python
+We can compute the means quite easily with ~numpy~ by specifying the axis
+#+LATEX: {\scriptsize
+#+begin_src python  :exports code :results none
+  means_a = np.mean(data, axis=(1,2))
+  means_b = np.mean(data, axis=(0,2))
+  means_ab = np.mean(data, axis=2)
+  grand_mean = np.mean(data)
+  print(f'X_i..={means_a}\nX_.j.={means_b}\nX_..k={means_ab}\nX_...', grand_mean)
+#+end_src
+#+LATEX: }
+** Two-factor ANOVA in Python
+Then calculate the sum of squares for each factor
+#+begin_src python  :exports code :results none
+  a, b, r = data.shape
+  ss_a = r * b * np.sum((means_a - grand_mean)**2)
+  ss_b = r * a * np.sum((means_b - grand_mean)**2)
+#+end_src
+
+** Two-factor ANOVA in Python
+To compute the sum of squares $\text{SS}_{AB}$ and $\text{SS}_{E}$ with numpy shortcuts, we need to match the dimensions of the arrays in the arithmetic operations. Otherwise you will get a broadcast error from numpy.
+#+LATEX: {\small
+#+begin_src python  :exports code :results none
+  # Convert `means_a` with shape (3,) to shape (3,4) by repeating it
+  #  as a column vector
+  # `means_a[:,np.newaxis]` first converts it into 3x1 2D vector,
+  # then `broadcast_to` tiles it to make `b` repeated columns
+  ma_stacked = np.broadcast_to(means_a[:, np.newaxis], (a, b))
+  # Convert `means_b` with shape (4,) to shape (3,4) by repeating it
+  #  as a row vector
+  # `means_b[np.newaxis,:]` first converts it into 1x4 2D vector,
+  # then `broadcast_to` tiles it to make `a` repeated rows
+  mb_stacked = np.broadcast_to(means_b[np.newaxis,:], (a, b))
+  mab_stacked = np.broadcast_to(means_ab[:,:,np.newaxis], (a, b, r))
+#+end_src
+#+LATEX: }
+** Two-factor ANOVA in Python
+Now we can compute $\text{SS}_{AB}$ and $\text{SS}_{E}$ with the appropriately shaped arrays
+
+#+begin_src python  :exports code :results none
+    ss_ab = r * np.sum(
+        (means_ab - ma_stacked - mb_stacked + grand_mean)**2)
+    ss_e = np.sum((data - mab_stacked)**2)
+#+end_src
+
+** Two-factor ANOVA in Python
+Then calculate the mean squares for each factor by dividing each SS by its dof.
+
+#+begin_src python  :exports code :results none
+  ms_a = ss_a / (a - 1)
+  ms_b = ss_b / (b - 1)
+  ms_ab = ss_ab / ((a - 1) * (b - 1))
+  # Denominator dof - reused for all F stats
+  dfe = (a * b * r - a * b)
+  ms_e = ss_e / dfe
+#+end_src
+
+** Two-factor ANOVA in Python
+Now we can compute the F-values:
+
+#+begin_src python  :exports code :results none
+  F_ab = ms_ab / ms_e
+  F_a = ms_a / ms_e
+  F_b = ms_b / ms_e
+#+end_src
+
+** Two-factor ANOVA in Python
+And finally, test our hypotheses
+#+LATEX: {\scriptsize
+#+begin_src python  :exports code :results none
+  alpha = 0.05
+  F_crit_ab = stats.f.ppf(1 - alpha, (a - 1) * (b - 1), dfe)
+  F_crit_a = stats.f.ppf(1 - alpha, a - 1, dfe)
+  F_crit_b = stats.f.ppf(1 - alpha, b - 1, dfe)
+
+  p_ab = stats.f.sf(F_ab, (a - 1) * (b - 1), dfe)
+  p_a = stats.f.sf(F_a, a - 1, dfe)
+  p_b = stats.f.sf(F_b, b - 1, dfe)
+
+  print(f'Interaction: F={F_ab:.4f}, F_crit={F_crit_ab:.4f},'
+        f' p={p_ab:.6f}, reject H0={F_ab >= F_crit_ab}')
+  print(f'Factor A:    F={F_a:.4f}, F_crit={F_crit_a:.4f},'
+        f' p={p_a:.6f}, reject H0={F_a >= F_crit_a}')
+  print(f'Factor B:    F={F_b:.4f}, F_crit={F_crit_b:.4f},'
+        f' p={p_b:.6f}, reject H0={F_b >= F_crit_b}')
+#+end_src
+#+LATEX: }
+** Two-factor ANOVA in Python with ~statsmodels~ module
+It is simpler to do this analysis using the ~statsmodels~ package. However, ~statsmodels~ expects dataframes like excel spreadsheets or tables in R. Thus we have to unwrap our 3-dimensional array into rows and columns (~rows~ in the code below) and make a ~pandas DataFrame~ out of it.
+
+#+LATEX: {\scriptsize
+#+begin_src python  :exports code :results none
+  import pandas as pd
+  from statsmodels.formula.api import ols
+  from statsmodels.stats.anova import anova_lm
+
+  # Reshape the (a, b, r) array into long format: one row per observation
+  rows = [(f'strain_{i+1}', f'soil_{j+1}', data[i, j, k])
+          for i in range(a) for j in range(b) for k in range(r)]
+  df = pd.DataFrame(rows, columns=['strain', 'soil', 'value'])
+  formula = 'value ~ C(strain) + C(soil) + C(strain):C(soil)'
+  model = ols(formula, data=df).fit()
+  print(anova_lm(model, typ=2))
+#+end_src
+#+LATEX: }
+** Two-factor ANOVA in Python with ~statsmodels~ module
+
+The output:
+#+begin_src python  :exports results :results output :tangle no
+  model = ols('value ~ C(strain)*C(soil)', data=df).fit()
+  print(anova_lm(model, typ=2))
+#+end_src
+
+#+RESULTS:
+:                        sum_sq    df           F        PR(>F)
+: C(strain)          327.773889   2.0  100.475647  2.175069e-12
+: C(soil)             86.907500   3.0   17.760388  2.738410e-06
+: C(strain):C(soil)    8.068333   6.0    0.824421  5.623028e-01
+: Residual            39.146667  24.0         NaN           NaN
+
+
+** Notes on ~statsmodels~ 2-F ANOVA
+Note the line
+#+begin_src python  :exports code :results none :tangle no
+  formula = 'value ~ C(strain) + C(soil) + C(strain):C(soil)'
+#+end_src
+- This is another way of saying $\mu_{ij} = \mu + \alpha_{i} + \beta_{j} + \gamma_{ij}$
+- ~value~ is dependent on ~strain~ and ~soil~, and their interaction
+- ~C(strain)~ tells ~statsmodels~ to treat ~strain~ as a categorical variable, and same for ~C(soil)~. Since our labels are already strings, ~statsmodels~ would have treated them as categorical anyway, even without ~C(...)~ - the wrapper only actually matters when the labels are numeric, in which case ~statsmodels~ would otherwise fit a line assuming these to be coordinates.
+- ~C(strain):C(soil)~ tells ~statsmodels~ to include the interaction between the two factors in the model.
+- A compact form of the formula is: ~'value ~ C(strain)*C(soil)'~
+
+** Notes on ~statsmodels~ 2-F ANOVA
+Note the line
+#+begin_src python  :exports code :results none :tangle no
+    model = ols(formula, data=df).fit()
+#+end_src
+- ~ols~ stands for "ordinary least squares", where the squared difference between the dependent variable value and the value computed with the formula using the corresponding values of the independent variables is minimized to estimate the coefficients in the formula. We actually fit a linear regression model to the data (this is related to general linear model, or GLM) using this method
+
+** Notes on ~statsmodels~ 2-F ANOVA
+~anova_lm(model, typ)~
+- ~model~ is a fitted linear model (output of ~ols(...).fit()~)
+- ~typ~ can be ~1~, ~2~, or ~3~. Does not matter for balanced design with insignificant interaction.
+  - ~typ=1~: /Sequential sums of squares/ - the sum of squares are computed incrementally, following the sequence in your formula. Not suited for unbalanced design unless there is a known hierarchy/order of the terms reflected in their sequence in the formula
+  - ~typ=2~: Appropriate when interactions can be ignored - should be default
+  - ~typ=3~: Appropriate for significant interaction, /but it's complicated/
+  - Read more at [[https://www.r-bloggers.com/2011/03/anova-%e2%80%93-type-iiiiii-ss-explained/][R-bloggers]] and [[https://stats.stackexchange.com/questions/345684/which-one-to-choose-type-i-type-ii-or-type-iii-anova][stats.stackexchange]]
+
+
+* References
+- [[https://milnepublishing.geneseo.edu/natural-resources-biometrics/chapter/chapter-6-two-way-analysis-of-variance/][Natural Resources Biometrics Copyright © 2014 by Diane Kiernan - Book chapter on 2-factor ANOVA with worked example]] - some of the content is borrowed from here
+- [[https://stats.libretexts.org/Courses/Sacramento_City_Colllege/PSYC_330%3A_Statistics_for_the_Behavioral_Sciences_with_Dr._DeSouza/13%3A_Two-Factor_ANOVAs_(by_Dr._Alisa_Beyer)/13.01%3A_Two-Factor_ANOVAs][Book Chapter in LibreTexts Statistics]]
+- [[https://statisticsforresearch.com/concepts/two-way-anova/][Stats for Scholars entry on 2-factor ANOVA]]
+- [[https://www.itl.nist.gov/div898/handbook/prc/section4/prc437.htm][NIST Engineering Statistics Handbook]] has a succinct summary of two factor ANOVA among many other things
