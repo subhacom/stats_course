@@ -463,6 +463,7 @@ Note the line
 
 
 * References
+** References
 - [[https://milnepublishing.geneseo.edu/natural-resources-biometrics/chapter/chapter-6-two-way-analysis-of-variance/][Natural Resources Biometrics Copyright © 2014 by Diane Kiernan - Book chapter on 2-factor ANOVA with worked example]] - some of the content is borrowed from here
 - [[https://stats.libretexts.org/Courses/Sacramento_City_Colllege/PSYC_330%3A_Statistics_for_the_Behavioral_Sciences_with_Dr._DeSouza/13%3A_Two-Factor_ANOVAs_(by_Dr._Alisa_Beyer)/13.01%3A_Two-Factor_ANOVAs][Book Chapter in LibreTexts Statistics]]
 - [[https://statisticsforresearch.com/concepts/two-way-anova/][Stats for Scholars entry on 2-factor ANOVA]]
