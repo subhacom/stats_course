@@ -20,7 +20,13 @@
 * Analysis of Variance (ANOVA)
 - One-way ANOVA
 - Two-way ANOVA
-* Linear regression
+* Regression
+/Note for the future: Linear regression should be taught before ANOVA, because computer algorithms for ANOVA use OLS model underneath - helps also to understand type I, II, and III of 2-factor ANOVA./
+
+- Simple Linear Regression
+- Multiple Linear Regression
+- Logistic Regression
+
 * Dimensionality reduction
 ** PCA
 ** umap

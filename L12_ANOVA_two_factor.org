@@ -29,7 +29,7 @@
 #+LANGUAGE: eng
 
 
-* Hypothesis testing for more than two factors
+* Hypothesis testing for two factors
 ** Factorial design
 - For one-way ANOVA we had only one categorical variable
 - You want to see the effect of two categorical variables on a continuous variable - the first two are the independent variables and the last is the dependent variable (also called response)
@@ -112,8 +112,8 @@ $SS_{total} = SS_{A} + SS_{B} + SS_{E}$
   #+end_export
 
 ** Formula for two-factor ANOVA
-- For $\alpha_{1} \cdots \alpha_{a}$ we need to estimate $a - 1$ parameters, the $a$-th $\alpha$ is already determined by the others because $\sum_{i=1}^{a}\alpha_{i} = 0$
-- For $\beta_{1} \cdots \beta_{b}$ we need to estimate $b - 1$ parameters, the $b$-th $\beta$ is already determined by the others because $\sum_{i=1}^{b}\beta_{i} = 0$
+- For $\alpha_{1} \cdots \alpha_{a}$ we need to estimate $a - 1$ parameters, the $a$ -th $\alpha$ is already determined by the others because $\sum_{i=1}^{a}\alpha_{i} = 0$
+- For $\beta_{1} \cdots \beta_{b}$ we need to estimate $b - 1$ parameters, the $b$ -th $\beta$ is already determined by the others because $\sum_{i=1}^{b}\beta_{i} = 0$
 - For estimating $\mu$ we use 1 degree of freedom
 - From a total $ab$ dof, we are losing $1 + (a-1) + (b-1) = a + b - 1$ dof to estimate all these parameters
 - $\frac{\sum_{i=1}^{a} \sum_{j=1}^{b} (X_{ij} - \hat{\mu} - \hat{\alpha}_{i} - \hat{\beta}_{j})^{2}}{\sigma^{2}}$ is a chi-square rv with $ab - (a + b -1) = (a - 1)(b-1)$ dof

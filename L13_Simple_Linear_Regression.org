@@ -1,0 +1,465 @@
+#+LATEX_COMPILER: xelatex
+#+STARTUP: beamer
+#+LaTeX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger,aspectratio=169]
+#+OPTIONS:   H:2  toc:nil ^:{} email:t tex:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+BEAMER_THEME: Rochester [height=40pt]
+#+BEAMER_COLOR_THEME: seahorse
+#+BEAMER_FONT_THEME: structurebold
+#+BEAMER_HEADER: \setbeamertemplate{footline}{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{author in head/foot}\hspace{2ex}\insertshortauthor\hfill\insertshorttitle\hfill\insertpagenumber\hspace{2ex}\end{beamercolorbox}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \setminted{frame=single}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[english]{datetime2}
+#+LATEX_HEADER: \DTMsetdatestyle{iso}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+latex_header: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+#+PROPERTY: header-args:python  :session L13 :tangle scripts/L13_simple_linear_regression.py
+
+#+TITLE: Lesson 13: Simple Linear Regression
+#+AUTHOR: Subhasis Ray
+#+EMAIL: ray dot subhasis at gmail dot com
+#+DATE: Created 2026-09-12 Updated: \today
+#+LANGUAGE: eng
+
+
+* Introduction: regression analysis
+** Regression analysis
+Often we want to understand the relationship between a dependent variable and one or more *continuous* independent variables
+- How does the amount of fat in food affect blood cholesterol?
+- How does the number of spines in CA3 pyramidal cells in the mouse-hippocampus change with age of the animal?
+- In general, how does $Y$ (dependent variable) relate to $X$ (independent variable), where $X$ is continuous
+- The objective is to (1) find a pattern in the relationship (describing $Y$ as a function of $X$ s), and (2) predict the value of $Y$ for a given value of $X$ s.
+* Simple linear regression
+** Simple linear regression
+There are several types of regression analysis depending on the nature of the variables: we will cover simple linear regression, multiple linear regression, and logistic regression.
+
+\bigskip
+
+Simple Linear Regression: The dependent variable $Y$ is continuous and depends on only one continuous independent variable $X$.
+
+
+We try to fit a straight line through the data points plotted on an X-Y graph
+
+#+begin_src python :results none :output none :exports none :tangle no
+  import numpy as np
+
+  import matplotlib.pyplot as plt
+  plt.switch_backend('AGG')
+
+  x = np.arange(20)
+  m = 0.6
+  c = 3
+  y = m * x + c + np.random.normal(0, 1, size=x.size)
+  fig, ax = plt.subplots()
+  fig.set_size_inches(3, 2)
+  ax.scatter(x, y, color='blue')
+  ax.plot(x, m * x + c, color='orange')
+  ax.set_ylim(0, np.ceil(y.max()) + 1)
+  ax.set_xlim(0, np.ceil(x.max()) + 1)
+  ax.set_xlabel('X')
+  ax.set_ylabel('Y')
+  fig.savefig('simple_linear_regression_1.png')
+  plt.close()
+#+end_src
+
+
+#+ATTR_LATEX: :height 0.45\textheight
+[[./simple_linear_regression_1.png]]
+** Simple Linear Regression
+The equation of a straight line in 2 dimensions:
+
+#+begin_export latex
+\begin{equation*}
+y = mx + c
+\end{equation*}
+#+end_export
+
+- $y$ denotes the ordinate
+- $x$ denotes the abscissa
+- $c$ is the intercept, the point where the line intersects with the $Y$ -axis, or the height of the line at $x=0$
+  - it may not always be interpretable, for example, if we are trying to fit $\hat{\text{weight}} = m\, \text{height} + c$, then weight of a person with height 0 does not make any sense
+- $m$ is the slope, $m=\tan{\theta}$ where $\theta$ is the angle subtended by the line on the X-axis
+
+** Simple Linear Regression
+The straight line is the underlying model for simple linear regression (with $\alpha \equiv c$ and $\beta \equiv m$): $Y = \alpha + \beta x + e$ where $e$ represents random error.
+
+\bigskip
+
+We can only /estimate/ $\alpha$ and $\beta$ from the data. Using $A$ as estimator of $\alpha$ and $B$ as estimator of $\beta$, we want to estimate each value of the response variable $\hat{Y_{i}} = A + B x_{i}$ while minimizing the error in estimation $\epsilon_{i}$.
+
+\bigskip
+
+#+begin_export latex
+\begin{equation*}
+\epsilon_{i} \equiv Y_{i} - \hat{Y_{i}} = Y_{i} - (A + B x_{i})
+\end{equation*}
+#+end_export
+
+How do we minimize the estimation error?
+
+* Method of Least Squares
+
+** Method of Least Squares
+
+$\epsilon_{i} = Y_{i} - A - B x_{i}$ where $A$ and $B$ are /estimators/ of $\alpha$ and $\beta$
+
+#+begin_src python :results graphics file output :file simple_linear_regression_2.png :exports results :tangle no
+  x = np.arange(20)
+  m = 0.6
+  c = 3
+  y_fit = m * x + c
+  y = m * x + c + np.random.normal(0, 1, size=x.size)
+  fig, ax = plt.subplots()
+  fig.set_size_inches(3, 2)
+  ax.scatter(x, y, color='blue')
+  ax.plot(x, m * x + c, color='orange')
+  ax.vlines(x, np.minimum(y, y_fit), np.maximum(y, y_fit),
+            color='red', linestyle='-', linewidth=1)
+
+  ax.set_ylim(0, np.ceil(y.max()) + 1)
+  ax.set_xlim(0, np.ceil(x.max()) + 1)
+  ax.set_xlabel('X')
+  ax.set_ylabel('Y')
+  fig.tight_layout()
+  fig.savefig('simple_linear_regression_2.png')
+#+end_src
+
+#+ATTR_LATEX: :height 0.5\textheight
+#+RESULTS:
+[[file:simple_linear_regression_2.png]]
+
+We want to find $A$ and $B$ that minimize the sum of squares of the error term $\sum_{i=1}^{n} \epsilon_{i}^{2}$
+
+\bigskip
+
+These are called /least square estimators/
+** Method of Least Squares
+
+#+begin_export latex
+{\small
+\begin{gather*}
+\text{Let}\qquad\qquad\\
+\begin{aligned}[c]
+S_{xY} &= \sum_{i=1}^{n}(x_{i} - \bar{x})(Y_{i} - \bar{Y})\\
+S_{xx} &= \sum_{i=1}^{n}(x_{i} - \bar{x})^{2}
+\end{aligned}
+\qquad\text{then it can be shown that}\qquad\qquad\\
+\begin{aligned}[c]
+B &= \frac{S_{xY}}{S_{xx}}\\
+A &= \bar{Y} - B \bar{x}
+\end{aligned}
+\end{gather*}
+}
+#+end_export
+** Linear regression with Python: ~scipy.stats.linregress~
+~scipy.stats~ module provides ~linregress(x, y, alternative=...)~ function for linear regression. The data for this example was taken from example 12.2 in Sheldon Ross' book. In this $x$ is the training time of employees and $Y$ is the time they took to complete a project after the training. Both times are in hours.
+#+begin_src python :results none :output none :exports code
+  from scipy import stats
+
+  x = [22, 18, 30, 16, 25, 20, 10, 14]
+  y = [18.4, 19.2, 14.5, 19.0, 16.6, 17.7, 24.4, 21.0]
+
+  result = stats.linregress(x, y)
+#+end_src
+
+The returned object ~result~ is of class ~LinregressResult~ encapsulating the results of the linear regression.
+
+** Linear regression with Python: LinregressResult
+#+begin_src python :results output :exports both
+print(f'slope        = {result.slope:.4f}')
+print(f'intercept    = {result.intercept:.4f}')
+print(f'rvalue       = {result.rvalue:.4f}')
+print(f'pvalue       = {result.pvalue:.4g}')
+print(f'stderr       = {result.stderr:.4f}')
+#+end_src
+** Linear regression with Python: LinregressResult
+The components of the result are
+1. ~slope~: slope of the regression line estimated from the data ( $B$ ). For each unit increse in $x$, $Y$ increases by $\beta$ units.
+2. ~intercept~: Y-intercept of the regression line estimated from the data ( $A$ )
+3. ~rvalue~: the Pearson correlation coefficient (more about it later)
+4. ~pvalue~: p-value for the hypothesis $H_{0}$: the slope is 0. We skipped the ~"alternative"~ parameter - which defaults to ~"two-sided"~. You could pass ~"less"~ for $H_{1}: \textit{slope is less than 0}$ or ~"greater"~ for $H_{1}: \textit{slope is greater than 0}$
+5. ~stderr~: standard error of the estimated slope
+** Linear regression with Python: plotting the fitted line with the data
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+ATTR_LATEX: :options fontsize=\scriptsize
+#+begin_src python :results graphics file output :file simple_linear_regression_3.png :tangle no
+  fig, ax = plt.subplots()
+  ax.scatter(x, y)
+  y_hat = result.intercept + result.slope * np.r_[x]
+  ax.plot(x, y_hat, color='red')
+  ax.set_xlabel('Training time (hrs)')
+  ax.set_ylabel('Project completion time (hrs)')
+  fig.set_size_inches(3,3)
+  fig.tight_layout()
+#+end_src
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+ATTR_LATEX: :height 0.6\textheight
+#+RESULTS:
+[[file:simple_linear_regression_3.png]]
+* Residuals
+** Error random variable and residuals
+Our linear regression model is $Y = \alpha + \beta x + e$
+- $\alpha$ and $\beta$ are unknown parameters estimated from data as $A$ and $B$
+
+Assumptions
+
+- $e$ is the error random variable: it is assumed to have a normal distribution with mean 0 and variance $\sigma^{2}$, i.e., $e \sim \mathcal{N}(0, \sigma^{2})$
+  - Note that this assumption means the variance of $e$ is independent of the value of $x$
+- Response variables $Y_{1}, Y_{2}, \cdots, Y_{n}$ are independent (they depend only on $x$, not other $Y$ s)
+
+$\epsilon = Y_{i} - (A + B x_{i})$ are also called *residuals*. This is the difference between the data value and the fitted value.
+** Importance of residuals
+They are biproducts of the fitting, but are informative about the validity of your analysis.
+
+*Residual analysis* is an important /diagnostic step/ after conducting linear regression.
+
+Are your assumptions about the data valid?
+- Linearity
+- Constant variance (homoscedasticity)
+- Independence
+- Normality of errors
+
+If these assumptions are violated, your inference can be misleading.
+
+** Error random variable and residuals
+For each $Y_{i}$ the standardized variable $\frac{e_{i}}{\sigma}$ should have a standard normal distribution.
+
+\bigskip
+
+Therefore, $\frac{\sum_{i=1}^{n}(Y_{i} - (\alpha + \beta x_{i}))^{2}}{\sigma^{2}}$ is chi-squared distributed with $n$ dof.
+
+\bigskip
+
+We lose 2 degrees of freedom in estimating $\alpha$ and $\beta$ with $A$ and $B$. Thus,
+
+#+begin_export latex
+\begin{equation*}
+\frac{\sum_{i=1}^{n}(Y_{i} - (A + B x_{i}))^{2}}{\sigma^{2}} \sim \chi_{n-2}^{2}
+\end{equation*}
+#+end_export
+
+** Error random variable and residuals
+
+With $\text{SS}_{R} \triangleq \sum_{i=1}^{n}(Y_{i} - (A + B x_{i}))^{2}$,
+
+#+begin_export latex
+\begin{align*}
+E\left[\frac{\text{SS}_{R}}{\sigma^{2}}\right] &= n - 2\\
+\implies E\left[\frac{\text{SS}_{R}}{n-2}\right] &= \sigma^{2}
+\end{align*}
+#+end_export
+Thus $\frac{\text{SS}_{R}}{n-2}$ is the estimator of $\sigma^{2}$
+
+\bigskip
+
+If a data point goes more than $2\sigma$ off the regression line, you should be suspicious of it being an outlier. An outliers are points that do not /appear/ to belong with the vast majority of the other data points.
+
+** Residual plots
+After fitting the regression line, you want to plot the standardized residuals against $x$ as a diagnostic step. There should be no trend in this plot (normally distributed around 0).
+
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+ATTR_LATEX: :options fontsize=\scriptsize
+#+begin_src python :results graphics file output :file simple_linear_regression_4.png :tangle no
+  fig, ax = plt.subplots(nrows=2, sharex='all')
+  ax[0].scatter(x, y)
+  y_hat = result.intercept + result.slope * np.r_[x]
+  ax[0].plot(x, y_hat, color='red')
+  ax[0].set_xlabel('Training time (hrs)')
+  ax[0].set_ylabel('Project completion time (hrs)')
+  s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
+  ax[1].scatter(x, (y - y_hat)/s)
+  ax[1].set_ylabel('Standardized residual')
+  fig.set_size_inches(4,4)
+  fig.tight_layout()
+#+end_src
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+ATTR_LATEX: :height 0.6\textheight
+#+RESULTS:
+[[file:simple_linear_regression_4.png]]
+** Examples of bad linear regression: Anscombe's quartet
+Francis Anscombe (1973) created this example countering the prevalent mindset among statisticians:
+#+begin_quote
+"Few of us escape being indoctrinated with these notions:
+
+  (1) numerical calculations are exact but graphs are rough;
+
+  (2) for any particular kind of statistical data there is just one set of claculations constituting a correct statistical analysis;
+
+  (3) performing intricate calculations is virtuous, whereas actually looking at the data is cheating."
+#+end_quote
+** Examples of bad linear regression: Anscombe's quartet
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+#+ATTR_LATEX: :height 0.8\textheight
+[[file:./Anscombe_quartet_3.pdf]]
+
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+#+LATEX: \small{
+All four have the same mean and variance of x and y, same correlation between x and y, and the same linear regression line.
+
+(1) simple linear relationship between x and y - good
+
+(2) there is a nonlinear relationship - Pearson correlation is meaningless
+
+(3) simple linear relationship, but regression line pulled up by one outlier
+
+(4) single outlier in x generates high correlation coefficient though there is no real relationship
+#+LATEX: }
+See https://statisticsfundamentals.com/simple-linear-regression/residuals/ for more
+** Residual analysis: Funnel/fan shaped residual plot
+Looking at the residual plots you can identify problem patterns and possible fixes for your analysis
+Funnel/fan shaped residual plot: signals heteroscedasticity, the variance of errors is not constant.
+- Try log-transforming $Y$, or use /weighted least squares/
+
+#+begin_src python :results graphics file output :file fan_shaped_residual.png :exports results :tangle no
+  fig, ax = plt.subplots(nrows=2, sharex='all')
+  x = np.arange(20)
+  y_base = x + 3 + np.random.normal(size=x.size)
+  y = y_base ** 1.5
+  result = stats.linregress(x, y)
+  ax[0].scatter(x, y)
+  y_hat = result.intercept + result.slope * np.r_[x]
+  ax[0].plot(x, y_hat, color='red')
+  s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
+  ax[1].scatter(x, (y - y_hat)/s)
+  ax[1].set_ylabel('Standardized residual')
+  fig.set_size_inches(4,4)
+  fig.tight_layout()
+#+end_src
+
+#+ATTR_LATEX: :height 0.6\textheight
+#+RESULTS:
+[[file:fan_shaped_residual.png]]
+** Residual analysis: Curved residual plot
+Curved residual plot: The true relationship is non-linear
+- Try transforming $x$ (for example, use $x' = \sqrt{x}$ as independent variable
+
+
+#+begin_src python :results graphics file output :file curved_residual.png :exports results :tangle no
+  fig, ax = plt.subplots(nrows=2, sharex='all')
+  x = np.arange(20)
+  y = np.sqrt(x) * 7 + 3 + np.random.normal(size=x.size)
+  result = stats.linregress(x, y)
+  ax[0].scatter(x, y)
+  y_hat = result.intercept + result.slope * np.r_[x]
+  ax[0].plot(x, y_hat, color='red')
+  s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
+  ax[1].scatter(x, (y - y_hat)/s)
+  ax[1].set_ylabel('Standardized residual')
+  fig.set_size_inches(4,4)
+  fig.tight_layout()
+#+end_src
+
+#+ATTR_LATEX: :height 0.6\textheight
+#+RESULTS:
+[[file:curved_residual.png]]
+
+
+** Residual analysis: Residuals cluster into distinct groups
+Residuals cluster into distinct groups: A categorical variable (not included in the model) influences $Y$
+#+begin_src python :results graphics file output :file clustered_residual.png :exports results :tangle no
+  fig, ax = plt.subplots(nrows=2, sharex='all')
+  x = np.arange(20)
+  group = x % 2 == 0
+  y = x * 7 + 3 + np.random.normal(size=x.size)
+  y[group] -= 8
+  result = stats.linregress(x, y)
+  ax[0].scatter(x[group], y[group], color='purple', label='group A')
+  ax[0].scatter(x[~group], y[~group], color='green', label='group B')
+  y_hat = result.intercept + result.slope * np.r_[x]
+  ax[0].plot(x, y_hat, color='red')
+  ax[0].legend()
+  s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
+  resid = (y - y_hat)/s
+  ax[1].scatter(x[group], resid[group], color='purple')
+  ax[1].scatter(x[~group], resid[~group], color='green')
+  ax[1].set_ylabel('Standardized residual')
+  fig.set_size_inches(4,4)
+  fig.tight_layout()
+#+end_src
+
+#+ATTR_LATEX: :height 0.6\textheight
+#+RESULTS:
+[[file:clustered_residual.png]]
+
+
+** Residual analysis: Isolated outlier
+Isolated outlier:
+- investigate if it was an error in data recording/experiment or a genuinely unusual case worth studying separately
+
+#+begin_src python :results graphics file output :file isolated_outlier_residual.png :exports results :tangle no
+  fig, ax = plt.subplots(nrows=2, sharex='all')
+  x = np.arange(20)
+  y = x * 7 + 3 + np.random.normal(size=x.size)
+  y[10] *=2
+  result = stats.linregress(x, y)
+  ax[0].scatter(x, y)
+  y_hat = result.intercept + result.slope * np.r_[x]
+  ax[0].plot(x, y_hat, color='red')
+  s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
+  ax[1].scatter(x, (y - y_hat)/s)
+  ax[1].set_ylabel('Standardized residual')
+  fig.set_size_inches(4,4)
+  fig.tight_layout()
+#+end_src
+
+#+ATTR_LATEX: :height 0.6\textheight
+#+RESULTS:
+[[file:isolated_outlier_residual.png]]
+
+** Outliers
+- Leverage point: an outlier far away in the horizontal (x) direction from the majority of the data points. Its value can influence (have leverage over) the slope of the regression line
+  - Think of the points as weights on a rod that is represented by the regression line. Far away points will produce larger torque (that's the principle of levers)
+  - If it falls close to the regression line based on the most of the data, then it does not change the slope much
+- Influential point: a leverage point that actually ends up changing the slope of the regression line
+
+** Outliers
+#+begin_src python :results graphics file output :file simple_linear_regression_5.png :exports results :tangle no
+  fig, ax = plt.subplots(ncols=2, sharey='all')
+  x = np.r_[np.arange(10), 20]
+  y1 = np.r_[x[:10] * 0.5 + 2, 14] + np.random.normal(size=x.size)
+  y2 = np.r_[y1[:10], 20]
+  ax[0].scatter(x, y1)
+  ax[1].scatter(x, y2)
+  slope1, intercept1, _, _, _ = stats.linregress(x, y1)
+  ax[0].plot(x, x * slope1 + intercept1, color='red', alpha=0.5)
+  slope2, intercept2, _, _, _ = stats.linregress(x, y2)
+  ax[1].plot(x, x * slope2 + intercept2, color='red', alpha=0.5)
+  fig.set_size_inches(8,4)
+  fig.tight_layout()
+#+end_src
+
+#+RESULTS:
+[[file:simple_linear_regression_5.png]]
+
+
+
+* References
+** References
+- [[https://pmc.ncbi.nlm.nih.gov/articles/PMC11537238/][Application and interpretation of linear-regression analysis by Narges Roustaei]]
+- Anscombe, F. J. (1973). "Graphs in Statistical Analysis". American Statistician. 27 (1): 17–21. doi:10.1080/00031305.1973.10478966
+- https://statisticsfundamentals.com/simple-linear-regression/residuals/
