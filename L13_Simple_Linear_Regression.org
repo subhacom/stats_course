@@ -32,10 +32,13 @@
 * Introduction: regression analysis
 ** Regression analysis
 Often we want to understand the relationship between a dependent variable and one or more *continuous* independent variables
+
+\bigskip
+
 - How does the amount of fat in food affect blood cholesterol?
-- How does the number of spines in CA3 pyramidal cells in the mouse-hippocampus change with age of the animal?
+- How does the number of spines in CA3 pyramidal cells in the mouse hippocampus change with age of the animal?
 - In general, how does $Y$ (dependent variable) relate to $X$ (independent variable), where $X$ is continuous
-- The objective is to (1) find a pattern in the relationship (describing $Y$ as a function of $X$ s), and (2) predict the value of $Y$ for a given value of $X$ s.
+- The objective is to (1) find a pattern in the relationship (describing $Y$ as a function of $X$ ), and (2) predict the value of $Y$ for a given value of $X$ .
 * Simple linear regression
 ** Simple linear regression
 There are several types of regression analysis depending on the nature of the variables: we will cover simple linear regression, multiple linear regression, and logistic regression.
@@ -158,8 +161,17 @@ A &= \bar{Y} - B \bar{x}
 \end{gather*}
 }
 #+end_export
+
 ** Linear regression with Python: ~scipy.stats.linregress~
-~scipy.stats~ module provides ~linregress(x, y, alternative=...)~ function for linear regression. The data for this example was taken from example 12.2 in Sheldon Ross' book. In this $x$ is the training time of employees and $Y$ is the time they took to complete a project after the training. Both times are in hours.
+~scipy.stats~ module provides ~linregress(x, y, alternative=...)~ function for linear regression.
+
+#+LATEX: {\scriptsize
+
+The data for this example was taken from example 12.2 in Sheldon Ross' book. In this $x$ is the training time of employees and $Y$ is the time they took to complete a project after the training. Both times are in hours.
+
+#+LATEX: }
+
+
 #+begin_src python :results none :output none :exports code
   from scipy import stats
 
@@ -180,18 +192,29 @@ print(f'pvalue       = {result.pvalue:.4g}')
 print(f'stderr       = {result.stderr:.4f}')
 #+end_src
 ** Linear regression with Python: LinregressResult
-The components of the result are
+Some components of the result are
+
 1. ~slope~: slope of the regression line estimated from the data ( $B$ ). For each unit increse in $x$, $Y$ increases by $\beta$ units.
 2. ~intercept~: Y-intercept of the regression line estimated from the data ( $A$ )
 3. ~rvalue~: the Pearson correlation coefficient (more about it later)
-4. ~pvalue~: p-value for the hypothesis $H_{0}$: the slope is 0. We skipped the ~"alternative"~ parameter - which defaults to ~"two-sided"~. You could pass ~"less"~ for $H_{1}: \textit{slope is less than 0}$ or ~"greater"~ for $H_{1}: \textit{slope is greater than 0}$
+4. ~pvalue~: p-value for the hypothesis $H_{0}: \textit{the slope is 0}$.
+   We skipped the ~"alternative"~ parameter - which defaults to ~"two-sided"~. You could pass
+
+   ~"less"~ for $H_{1}: \textit{slope is less than 0}$ or
+
+   ~"greater"~ for $H_{1}: \textit{slope is greater than 0}$
 5. ~stderr~: standard error of the estimated slope
-** Linear regression with Python: plotting the fitted line with the data
-*** Left                                                              :BMCOL:
+** Linear regression with Python: Plotting the fitted line over the data
+*** Columns                                                        :B_columns:
 :PROPERTIES:
-:BEAMER_col: 0.6
+:BEAMER_env: columns
+:BEAMER_OPT: T,onlytextwidth
 :END:
-#+ATTR_LATEX: :options fontsize=\scriptsize
+**** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+#+ATTR_LATEX: :options fontsize=\footnotesize,breaklines
 #+begin_src python :results graphics file output :file simple_linear_regression_3.png :tangle no
   fig, ax = plt.subplots()
   ax.scatter(x, y)
@@ -202,11 +225,11 @@ The components of the result are
   fig.set_size_inches(3,3)
   fig.tight_layout()
 #+end_src
-*** Right                                                             :BMCOL:
+**** Right                                                             :BMCOL:
 :PROPERTIES:
-:BEAMER_col: 0.5
+:BEAMER_col: 0.3
 :END:
-#+ATTR_LATEX: :height 0.6\textheight
+#+ATTR_LATEX: :width \textwidth
 #+RESULTS:
 [[file:simple_linear_regression_3.png]]
 * Residuals
@@ -214,12 +237,14 @@ The components of the result are
 Our linear regression model is $Y = \alpha + \beta x + e$
 - $\alpha$ and $\beta$ are unknown parameters estimated from data as $A$ and $B$
 
-Assumptions
+*** Assumptions
 
-- $e$ is the error random variable: it is assumed to have a normal distribution with mean 0 and variance $\sigma^{2}$, i.e., $e \sim \mathcal{N}(0, \sigma^{2})$
-  - Note that this assumption means the variance of $e$ is independent of the value of $x$
+- $e$ is the error random variable: $e \sim \mathcal{N}(0, \sigma^{2})$ - the variance of $e$ is independent of the value of $x$
 - Response variables $Y_{1}, Y_{2}, \cdots, Y_{n}$ are independent (they depend only on $x$, not other $Y$ s)
-
+*** Bottom                                                        :B_onlyenv:
+:PROPERTIES:
+:BEAMER_env: onlyenv
+:END:
 $\epsilon = Y_{i} - (A + B x_{i})$ are also called *residuals*. This is the difference between the data value and the fitted value.
 ** Importance of residuals
 They are biproducts of the fitting, but are informative about the validity of your analysis.
@@ -265,14 +290,19 @@ Thus $\frac{\text{SS}_{R}}{n-2}$ is the estimator of $\sigma^{2}$
 
 \bigskip
 
-If a data point goes more than $2\sigma$ off the regression line, you should be suspicious of it being an outlier. An outliers are points that do not /appear/ to belong with the vast majority of the other data points.
+If a data point goes more than $2\sigma$ off the regression line, you should be suspicious of it being an outlier. Outliers are points that do not /appear/ to belong with the vast majority of the other data points.
 
 ** Residual plots
 After fitting the regression line, you want to plot the standardized residuals against $x$ as a diagnostic step. There should be no trend in this plot (normally distributed around 0).
-
-*** Left                                                              :BMCOL:
+*** Columns                                                        :B_columns:
 :PROPERTIES:
-:BEAMER_col: 0.5
+:BEAMER_env: columns
+:BEAMER_OPT: T,onlytextwidth
+:END:
+
+**** Left                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
 :END:
 #+ATTR_LATEX: :options fontsize=\scriptsize
 #+begin_src python :results graphics file output :file simple_linear_regression_4.png :tangle no
@@ -288,9 +318,9 @@ After fitting the regression line, you want to plot the standardized residuals a
   fig.set_size_inches(4,4)
   fig.tight_layout()
 #+end_src
-*** Right                                                             :BMCOL:
+**** Right                                                            :BMCOL:
 :PROPERTIES:
-:BEAMER_col: 0.5
+:BEAMER_col: 0.4
 :END:
 #+ATTR_LATEX: :height 0.6\textheight
 #+RESULTS:
@@ -307,19 +337,34 @@ Francis Anscombe (1973) created this example countering the prevalent mindset am
   (3) performing intricate calculations is virtuous, whereas actually looking at the data is cheating."
 #+end_quote
 ** Examples of bad linear regression: Anscombe's quartet
-*** Left                                                              :BMCOL:
+*** Columns                                                        :B_columns:
 :PROPERTIES:
-:BEAMER_col: 0.7
+:BEAMER_env: columns
+:BEAMER_OPT: T,onlytextwidth
 :END:
-#+ATTR_LATEX: :height 0.8\textheight
+**** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+ATTR_LATEX: :height 0.7\textheight
 [[file:./Anscombe_quartet_3.pdf]]
 
-*** Right                                                             :BMCOL:
+#+LATEX: {\footnotesize
+See https://statisticsfundamentals.com/simple-linear-regression/residuals/ for more
+
+#+LATEX: }
+
+
+**** Right                                                             :BMCOL:
 :PROPERTIES:
 :BEAMER_col: 0.4
 :END:
-#+LATEX: \small{
+
+#+LATEX: {\footnotesize
 All four have the same mean and variance of x and y, same correlation between x and y, and the same linear regression line.
+
+\bigskip
 
 (1) simple linear relationship between x and y - good
 
@@ -328,11 +373,20 @@ All four have the same mean and variance of x and y, same correlation between x 
 (3) simple linear relationship, but regression line pulled up by one outlier
 
 (4) single outlier in x generates high correlation coefficient though there is no real relationship
+
 #+LATEX: }
-See https://statisticsfundamentals.com/simple-linear-regression/residuals/ for more
+
+
+
+
+
+** Diagnostics with residual analysis
+By looking at the residual plots you can identify problem patterns and possible fixes for your analysis. If the data is suited for linear regression analysis, then residuals should be randomly distributed around $y=0$ line without any visible pattern
+
 ** Residual analysis: Funnel/fan shaped residual plot
-Looking at the residual plots you can identify problem patterns and possible fixes for your analysis
+
 Funnel/fan shaped residual plot: signals heteroscedasticity, the variance of errors is not constant.
+
 - Try log-transforming $Y$, or use /weighted least squares/
 
 #+begin_src python :results graphics file output :file fan_shaped_residual.png :exports results :tangle no
@@ -356,7 +410,7 @@ Funnel/fan shaped residual plot: signals heteroscedasticity, the variance of err
 [[file:fan_shaped_residual.png]]
 ** Residual analysis: Curved residual plot
 Curved residual plot: The true relationship is non-linear
-- Try transforming $x$ (for example, use $x' = \sqrt{x}$ as independent variable
+- Try transforming $x$ - for example, use $x' = \sqrt{x}$ as independent variable
 
 
 #+begin_src python :results graphics file output :file curved_residual.png :exports results :tangle no
