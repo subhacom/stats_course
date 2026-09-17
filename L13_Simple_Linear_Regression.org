@@ -232,6 +232,13 @@ Some components of the result are
 #+ATTR_LATEX: :width \textwidth
 #+RESULTS:
 [[file:simple_linear_regression_3.png]]
+* Standardization
+** The slope of the regression line depends on the units
+Suppose you are plotting height of plants against age
+- What happens if you record the height in $mm$, $cm$, or $m$, while recording age in $days$?
+- What happens if you record the height in $m$, while recording age in $hours$, $days$, $weeks$, $months$ or $years$?
+** Standardization soves this unit dependence
+Subtract the mean and divide by the standard deviation
 * Residuals
 ** Error random variable and residuals
 Our linear regression model is $Y = \alpha + \beta x + e$
