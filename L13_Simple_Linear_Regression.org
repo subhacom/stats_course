@@ -175,8 +175,8 @@ The data for this example was taken from example 12.2 in Sheldon Ross' book. In 
 #+begin_src python :results none :output none :exports code
   from scipy import stats
 
-  x = [22, 18, 30, 16, 25, 20, 10, 14]
-  y = [18.4, 19.2, 14.5, 19.0, 16.6, 17.7, 24.4, 21.0]
+  x = np.r_[22, 18, 30, 16, 25, 20, 10, 14]
+  y = np.r_[18.4, 19.2, 14.5, 19.0, 16.6, 17.7, 24.4, 21.0]
 
   result = stats.linregress(x, y)
 #+end_src
@@ -218,7 +218,7 @@ Some components of the result are
 #+begin_src python :results graphics file output :file simple_linear_regression_3.png :tangle no
   fig, ax = plt.subplots()
   ax.scatter(x, y)
-  y_hat = result.intercept + result.slope * np.r_[x]
+  y_hat = result.intercept + result.slope * x
   ax.plot(x, y_hat, color='red')
   ax.set_xlabel('Training time (hrs)')
   ax.set_ylabel('Project completion time (hrs)')
@@ -232,13 +232,142 @@ Some components of the result are
 #+ATTR_LATEX: :width \textwidth
 #+RESULTS:
 [[file:simple_linear_regression_3.png]]
+** Coefficient of determination $R^{2}$
+A measure of variability in $Y$ is $S_{YY} = \sum_{i=1}^{n}(Y_{i} - \bar{Y})^{2}$
+
+This arises from two parts:
+1) The $x$ values are changing. According our model, each $Y_{i}$ has a mean $\alpha + \beta x_{i}$ corresponding to its $x_{i}$
+2) The /residual/ variability left over despite taking the variability due to changing $x$ : $\text{SS}_{R} = \sum_{i=1}^{n}(Y_{i} - A - B x_{i})^{2}$
+
+Therefore the amount of variability explained by variation in $x$ is $S_{YY} - \text{SS}_{R}$.
+
+The proportion of variability in $Y$ explained by the variation in $x$ is
+
+\begin{equation*}
+R^{2} \triangleq \frac{S_{YY} - \text{SS}_{R}}{S_{YY}}
+\end{equation*}
+
+** Pearson's correlation coefficient
+
+Covariance of $x$ and $Y$ is defined as:
+
+\begin{equation*}
+\text{Cov}(x, Y) = \sigma^{2}_{xY} = \frac{1}{n}\sum_{i=1}^{n}(x_{i} - \mu_{x})(Y_{i} - \mu_{Y})
+\end{equation*}
+
+When $\bar{Y}$ is the estimation of $\mu_{Y}$ from the sample, the sample covariance becomes:
+
+\begin{equation*}
+\frac{1}{n-1}\sum_{i=1}^{n}(x_{i} - \bar{x})(Y_{i} - \bar{Y}) = S_{xY} / (n-1)
+\end{equation*}
+
+Sample variance of $x : S_{xx}/(n-1)$, sample variance of $Y : S_{YY}/(n-1)$
+
+
+Pearson's correlation coefficeint or sample correlation coefficient is
+
+\begin{equation*}
+\rho \triangleq \frac{\text{Cov}(x, Y)}{\sqrt{\text{Var}(x) \text{Var}(Y)}} = \frac{S_{xY}}{\sqrt{S_{xx}S_{YY}}}
+\end{equation*}
+
+** Pearson's correlation coefficient
+
+A bit of algebra shows that: $|\rho| = \sqrt{R^{2}}$
+
+- $R^{2}$ lies in the range $[0, 1]$.
+  - Small value indicates little of the variability in $Y$ is explained by variation of $x$
+  - Large value indicates most of the variability is explained by variation of $x$
+- $\rho$ lies in $[-1, 1]$
+  - Positive value indicates large values of $x$ are associated with large values of $Y$ and small values of $x$ with small values of $Y$.
+  - Negative value indicates large values of $x$ are associated with small values of $Y$ and vice versa
+  - Value close to 0 indicate there is little association between values of $x$ and $Y$
+
+** Correlation is not /causation/
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+“Chocolate Consumption, Cognitive Function, and Nobel Laureates”
+
+\bigskip
+
+Franz Messerli.  Oct 18, 2012, New England Journal of Medicine
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+ATTR_LATEX: :width \textwidth
+[[file:./chocolate_consumption_nobel_correlation.png]]
+
+** Correlation is not /causation/
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.3
+:END:
+#+ATTR_LATEX: :width \textwidth
+[[file:./stork_delivering_babies.png.jpg]]
+
+#+LATEX: {\scriptsize
+One speculation suggests the myth was strong in medieval northern Europe as the migration of storks coincided with baby-boom!
+
+“Storks deliver babies (p=0.008)”. Robert  Matthews. Teaching Statistics, 2000
+
+#+LATEX: }
+
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+ATTR_LATEX: :width \textwidth
+[[file:./stork_baby_correlation.png]]
+
+
+** Correlation is not /causation/
+Credit: https://stats.stackexchange.com/questions/219579/what-is-wrong-with-extrapolation
+
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:./spurious_correlation.png]]
+
 * Standardization
 ** The slope of the regression line depends on the units
 Suppose you are plotting height of plants against age
 - What happens if you record the height in $mm$, $cm$, or $m$, while recording age in $days$?
 - What happens if you record the height in $m$, while recording age in $hours$, $days$, $weeks$, $months$ or $years$?
-** Standardization soves this unit dependence
-Subtract the mean and divide by the standard deviation
+
+** Standardization solves this unit dependence
+Convert each variable by subtracting its mean and dividing by its standard deviation
+- The resulting fitted slope is $\rho$
+
+*** Columns                                                        :B_columns:
+:PROPERTIES:
+:BEAMER_env: columns
+:BEAMER_OPT: T,onlytextwidth
+:END:
+**** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+#+ATTR_LATEX: :options fontsize=\tiny,breaklines
+#+begin_src python :results graphics file output :file simple_linear_regression_3_1.png :tangle no
+  x_s = (x - np.mean(x))/np.std(x, ddof=1)
+  y_s = (y - np.mean(y))/np.std(y, ddof=1)
+  result_s = stats.linregress(x_s, y_s)
+  fig, ax = plt.subplots()
+  ax.scatter(x_s, y_s)
+  y_hat_s = result_s.intercept + result_s.slope * x_s
+  ax.plot(x_s, y_hat_s, color='red', label=f'slope={result_s.slope:0.2f}')
+  ax.legend()
+  ax.set_xlabel('Training time (standardized)')
+  ax.set_ylabel('Project completion time (standardized)')
+  fig.set_size_inches(3,3)
+  fig.tight_layout()
+#+end_src
+**** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.3
+:END:
+#+ATTR_LATEX: :width \textwidth
+[[file:./simple_linear_regression_3_1.png]]
 * Residuals
 ** Error random variable and residuals
 Our linear regression model is $Y = \alpha + \beta x + e$
@@ -315,7 +444,7 @@ After fitting the regression line, you want to plot the standardized residuals a
 #+begin_src python :results graphics file output :file simple_linear_regression_4.png :tangle no
   fig, ax = plt.subplots(nrows=2, sharex='all')
   ax[0].scatter(x, y)
-  y_hat = result.intercept + result.slope * np.r_[x]
+  y_hat = result.intercept + result.slope * x
   ax[0].plot(x, y_hat, color='red')
   ax[0].set_xlabel('Training time (hrs)')
   ax[0].set_ylabel('Project completion time (hrs)')
@@ -403,7 +532,7 @@ Funnel/fan shaped residual plot: signals heteroscedasticity, the variance of err
   y = y_base ** 1.5
   result = stats.linregress(x, y)
   ax[0].scatter(x, y)
-  y_hat = result.intercept + result.slope * np.r_[x]
+  y_hat = result.intercept + result.slope * x
   ax[0].plot(x, y_hat, color='red')
   s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
   ax[1].scatter(x, (y - y_hat)/s)
@@ -426,7 +555,7 @@ Curved residual plot: The true relationship is non-linear
   y = np.sqrt(x) * 7 + 3 + np.random.normal(size=x.size)
   result = stats.linregress(x, y)
   ax[0].scatter(x, y)
-  y_hat = result.intercept + result.slope * np.r_[x]
+  y_hat = result.intercept + result.slope * x
   ax[0].plot(x, y_hat, color='red')
   s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
   ax[1].scatter(x, (y - y_hat)/s)
@@ -451,7 +580,7 @@ Residuals cluster into distinct groups: A categorical variable (not included in 
   result = stats.linregress(x, y)
   ax[0].scatter(x[group], y[group], color='purple', label='group A')
   ax[0].scatter(x[~group], y[~group], color='green', label='group B')
-  y_hat = result.intercept + result.slope * np.r_[x]
+  y_hat = result.intercept + result.slope * x
   ax[0].plot(x, y_hat, color='red')
   ax[0].legend()
   s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
@@ -479,7 +608,7 @@ Isolated outlier:
   y[10] *=2
   result = stats.linregress(x, y)
   ax[0].scatter(x, y)
-  y_hat = result.intercept + result.slope * np.r_[x]
+  y_hat = result.intercept + result.slope * x
   ax[0].plot(x, y_hat, color='red')
   s = np.sqrt(np.sum((y - y_hat)**2)/(len(y) - 2))
   ax[1].scatter(x, (y - y_hat)/s)
@@ -517,6 +646,96 @@ Isolated outlier:
 #+RESULTS:
 [[file:simple_linear_regression_5.png]]
 
+
+
+
+* Interpolation and extrapolation
+** Interpolation
+Once we fit a linear regression model to the data, we can estimate expected value of $Y$ for values of $x$ not present in the data. When the new value of $x$ lies within the data range, this is called interpolation.
+\begin{equation*}
+Y(x) = A + B x
+\end{equation*}
+
+#+begin_src python :results graphics file output :file interpolation.png :exports results :tangle no
+  fig, ax = plt.subplots()
+  x = np.arange(10)
+  y = x * 0.5 + 2 + np.random.normal(size=x.size)
+  ax.scatter(x, y)
+  slope, intercept, _, _, _ = stats.linregress(x, y)
+  ax.plot(x, x * slope + intercept, color='black', alpha=0.5)
+  x1 = 5.6
+  y1 = x1 * slope + intercept
+  ax.scatter([x1], [y1])
+  ax.vlines([x1], [0], [y1],
+            color='red', linestyle='-', linewidth=1)
+
+  fig.set_size_inches(8,4)
+  fig.tight_layout()
+#+end_src
+
+#+ATTR_LATEX: :height 0.5\textheight
+#+RESULTS:
+[[file:interpolation.png]]
+
+** Extrapolation
+
+If the new value of $x$ is outside the data range, then it is called /extrapolation/.
+
+
+\bigskip
+#+LATEX: {\huge
+*DO NOT EXTRAPOLATE!*
+#+LATEX:}
+
+\bigskip
+
+#+begin_quote
+Consider a turkey that is fed every day. Every single feeding will firm up the bird's belief that it is the general rule of life to be fed every day by friendly members of the human race "looking out for its best interests," as a politician would say. On the afternoon of the Wednesday before Thanksgiving, something unexpected will happen to the turkey. It will incur a revision of belief.
+
+-- Nassim Taleb
+#+end_quote
+
+
+
+** Extrapolation
+#+LATEX: {\scriptsize
+Credit: https://stats.stackexchange.com/questions/219579/what-is-wrong-with-extrapolation
+#+LATEX: }
+
+#+ATTR_LATEX: :height 0.7\textheight
+[[file:./extrapolation_stats_statexchange.jpg]]
+
+** Extrapolation
+[[https://xkcd.com/605/][xkcd - Extrapolating]]
+
+#+ATTR_LATEX: :height 0.7\textheight
+[[file:./xkcd_extrapolation.png]]
+
+** Extrapolation
+[[https://xkcd.com/1007/][xkcd - Sustainable]]
+
+#+ATTR_LATEX: :height 0.7\textheight
+[[file:./xkcd_extrapolation_2.png]]
+
+
+** Extrapolation
+
+*** Left                                                              :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+[[https://xkcd.com/1154/][xkcd - Resolution]]
+
+
+#+ATTR_LATEX: :height 0.7\textheight
+[[file:./xkcd_extrapolation_3.png]]
+
+*** Right                                                             :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.3
+:END:
+
+Hover text: 2031: Google defends the swiveling roof-mounted scanning electron microscopes on its Street View cars, saying they 'don't reveal anything that couldn't be seen by any pedestrian scanning your house with an electron microscope.'
 
 
 * References
