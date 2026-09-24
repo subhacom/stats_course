@@ -215,7 +215,7 @@ Some components of the result are
 :BEAMER_col: 0.7
 :END:
 #+ATTR_LATEX: :options fontsize=\footnotesize,breaklines
-#+begin_src python :results graphics file output :file simple_linear_regression_3.png :tangle no
+#+begin_src python :results graphics file output :file simple_linear_regression_3.png :exports code
   fig, ax = plt.subplots()
   ax.scatter(x, y)
   y_hat = result.intercept + result.slope * x
